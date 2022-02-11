@@ -1,2 +1,0 @@
-# acl
-Access Control List
