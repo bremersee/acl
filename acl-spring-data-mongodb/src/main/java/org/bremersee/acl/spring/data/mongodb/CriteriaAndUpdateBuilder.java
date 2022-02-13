@@ -46,54 +46,65 @@ public class CriteriaAndUpdateBuilder {
     this.aclPath = Objects.isNull(aclPath) ? "" : aclPath;
   }
 
-  public Update buildUpdate(
+  public AclModificationUpdate buildUpdate(
       @NotNull AccessControlListModifications accessControlListModifications) {
 
     Collection<AccessControlEntryModifications> mods = accessControlListModifications
-        .getModifications();
-    Update update = new Update();
+        .getModificationsDistinct();
+
+    Update addAndSetUpdate = new Update();
+    Update removeUpdate = new Update();
+    boolean isSomethingRemoved = false;
+
     for (AccessControlEntryModifications mod : mods) {
-      update = update.set(
+
+      // guest
+      addAndSetUpdate = addAndSetUpdate.set(
           path(Acl.ENTRIES, mod.getPermission(), Ace.GUEST),
           mod.isGuest());
+
+      // users
       if (!mod.getAddUsers().isEmpty()) {
-        for (String user : mod.getAddUsers()) {
-          update = update.push(
-              path(Acl.ENTRIES, mod.getPermission(), Ace.USERS),
-              user);
-        }
+        addAndSetUpdate = addAndSetUpdate
+            .addToSet(path(Acl.ENTRIES, mod.getPermission(), Ace.USERS))
+            .each((Object[]) mod.getAddUsers().toArray(new String[0]));
       }
       if (!mod.getRemoveUsers().isEmpty()) {
-        update = update.pullAll(
+        isSomethingRemoved = true;
+        removeUpdate = removeUpdate.pullAll(
             path(Acl.ENTRIES, mod.getPermission(), Ace.USERS),
             mod.getRemoveUsers().toArray(new String[0]));
       }
+
+      // roles
       if (!mod.getAddRoles().isEmpty()) {
-        for (String role : mod.getAddRoles()) {
-          update = update.push(
-              path(Acl.ENTRIES, mod.getPermission(), Ace.ROLES),
-              role);
-        }
+        addAndSetUpdate = addAndSetUpdate
+            .addToSet(path(Acl.ENTRIES, mod.getPermission(), Ace.ROLES))
+            .each((Object[]) mod.getAddRoles().toArray(new String[0]));
       }
       if (!mod.getRemoveRoles().isEmpty()) {
-        update = update.pullAll(
+        isSomethingRemoved = true;
+        removeUpdate = removeUpdate.pullAll(
             path(Acl.ENTRIES, mod.getPermission(), Ace.ROLES),
             mod.getRemoveRoles().toArray(new String[0]));
       }
+
       if (!mod.getAddGroups().isEmpty()) {
-        for (String group : mod.getAddGroups()) {
-          update = update.push(
-              path(Acl.ENTRIES, mod.getPermission(), Ace.GROUPS),
-              group);
-        }
+        addAndSetUpdate = addAndSetUpdate
+            .addToSet(path(Acl.ENTRIES, mod.getPermission(), Ace.GROUPS))
+            .each((Object[]) mod.getAddGroups().toArray(new String[0]));
       }
       if (!mod.getRemoveGroups().isEmpty()) {
-        update = update.pullAll(
+        isSomethingRemoved = true;
+        removeUpdate = removeUpdate.pullAll(
             path(Acl.ENTRIES, mod.getPermission(), Ace.GROUPS),
             mod.getRemoveGroups().toArray(new String[0]));
       }
     }
-    return update;
+    return AclModificationUpdate.builder()
+        .preparationUpdates(isSomethingRemoved ? List.of(addAndSetUpdate) : List.of())
+        .finalUpdate(isSomethingRemoved ? removeUpdate : addAndSetUpdate)
+        .build();
   }
 
   public Update buildUpdate(Acl acl) {

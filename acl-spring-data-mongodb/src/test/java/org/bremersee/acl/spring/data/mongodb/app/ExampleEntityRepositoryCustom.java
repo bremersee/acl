@@ -19,7 +19,9 @@ package org.bremersee.acl.spring.data.mongodb.app;
 import java.util.Collection;
 import java.util.Optional;
 import org.bremersee.acl.AccessEvaluation;
+import org.bremersee.acl.Acl;
 import org.bremersee.acl.UserContext;
+import org.bremersee.acl.model.AccessControlListModifications;
 
 /**
  * @author Christian Bremer
@@ -31,5 +33,17 @@ public interface ExampleEntityRepositoryCustom {
       UserContext userContext,
       AccessEvaluation accessEvaluation,
       Collection<String> permissions);
+
+  Optional<ExampleEntity> modifyAclByOtherContent(
+      String otherContent,
+      UserContext userContext,
+      AccessControlListModifications modifications);
+
+  Optional<ExampleEntity> replaceAclByOtherContent(String otherContent, Acl newAcl);
+
+  Optional<ExampleEntity> changeOwnerByOtherContent(
+      String otherContent,
+      UserContext userContext,
+      String newOwner);
 
 }

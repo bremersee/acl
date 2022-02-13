@@ -78,7 +78,13 @@ class AclTest {
             .modifications(List.of(
                 AccessControlEntryModifications.builder()
                     .permission("read")
+                    .isGuest(true)
                     .addUsers(List.of("james"))
+                    .build(),
+                AccessControlEntryModifications.builder()
+                    .permission("read")
+                    .isGuest(true)
+                    .addUsers(List.of("anna"))
                     .build()
             ))
             .build(),
@@ -90,7 +96,8 @@ class AclTest {
     assertThat(actual)
         .hasValue(Acl.builder()
             .from(target)
-            .addUsers("read", List.of("james"))
+            .guest("read", true)
+            .addUsers("read", List.of("anna", "james"))
             .build());
   }
 
@@ -100,14 +107,7 @@ class AclTest {
         .addUsers("write", List.of("james"))
         .build();
     Optional<Acl> actual = target.modify(
-        AccessControlListModifications.builder()
-            .modifications(List.of(
-                AccessControlEntryModifications.builder()
-                    .permission("read")
-                    .addUsers(List.of("james"))
-                    .build()
-            ))
-            .build(),
+        AccessControlListModifications.builder().build(),
         UserContext.builder()
             .name("james")
             .build(),

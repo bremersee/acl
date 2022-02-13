@@ -301,7 +301,8 @@ public interface Acl {
 
     public AclBuilder apply(AccessControlListModifications modifications) {
       if (nonNull(modifications)) {
-        modifications.getModifications().forEach(aceMods -> {
+        modifications.getModificationsDistinct().forEach(aceMods -> {
+          guest(aceMods.getPermission(), aceMods.isGuest());
           addUsers(aceMods.getPermission(), aceMods.getAddUsers());
           removeUsers(aceMods.getPermission(), aceMods.getRemoveUsers());
           addRoles(aceMods.getPermission(), aceMods.getAddRoles());

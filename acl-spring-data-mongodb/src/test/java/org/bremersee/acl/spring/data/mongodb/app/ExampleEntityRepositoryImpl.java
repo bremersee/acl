@@ -17,13 +17,20 @@
 package org.bremersee.acl.spring.data.mongodb.app;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.bremersee.acl.AccessEvaluation;
+import org.bremersee.acl.Acl;
+import org.bremersee.acl.PermissionConstants;
 import org.bremersee.acl.UserContext;
+import org.bremersee.acl.model.AccessControlListModifications;
+import org.bremersee.acl.spring.data.mongodb.AclModificationUpdate;
 import org.bremersee.acl.spring.data.mongodb.CriteriaAndUpdateBuilder;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 /**
  * @author Christian Bremer
@@ -38,6 +45,7 @@ public class ExampleEntityRepositoryImpl implements ExampleEntityRepositoryCusto
     this.mongoTemplate = mongoTemplate;
   }
 
+  @Override
   public Optional<ExampleEntity> findByOtherContent(
       String otherContent,
       UserContext userContext,
@@ -51,6 +59,58 @@ public class ExampleEntityRepositoryImpl implements ExampleEntityRepositoryCusto
     Criteria otherContentCriteria = Criteria.where(ExampleEntity.OTHER_CONTENT).is(otherContent);
     Query query = Query.query(new Criteria().andOperator(accessCriteria, otherContentCriteria));
     return Optional.ofNullable(mongoTemplate.findOne(query, ExampleEntity.class));
+  }
+
+  @Override
+  public Optional<ExampleEntity> modifyAclByOtherContent(
+      String otherContent,
+      UserContext userContext,
+      AccessControlListModifications modifications) {
+
+    Criteria accessCriteria = builder.buildPermissionCriteria(
+        userContext,
+        AccessEvaluation.ANY_PERMISSION,
+        List.of(PermissionConstants.ADMINISTRATION));
+    Criteria otherContentCriteria = Criteria.where(ExampleEntity.OTHER_CONTENT).is(otherContent);
+    Query query = Query.query(new Criteria().andOperator(accessCriteria, otherContentCriteria));
+    AclModificationUpdate updates = builder.buildUpdate(modifications);
+    updates.getPreparationUpdates()
+        .forEach(preparationUpdate -> mongoTemplate
+            .updateFirst(query, preparationUpdate, ExampleEntity.class));
+    FindAndModifyOptions options = new FindAndModifyOptions()
+        .returnNew(true);
+    return Optional.ofNullable(mongoTemplate.findAndModify(
+        query,
+        updates.getFinalUpdate(),
+        options,
+        ExampleEntity.class));
+  }
+
+  @Override
+  public Optional<ExampleEntity> replaceAclByOtherContent(String otherContent, Acl newAcl) {
+    Criteria otherContentCriteria = Criteria.where(ExampleEntity.OTHER_CONTENT).is(otherContent);
+    Query query = Query.query(otherContentCriteria);
+    Update update = builder.buildUpdate(newAcl);
+    FindAndModifyOptions options = new FindAndModifyOptions()
+        .returnNew(true);
+    return Optional
+        .ofNullable(mongoTemplate.findAndModify(query, update, options, ExampleEntity.class));
+  }
+
+  @Override
+  public Optional<ExampleEntity> changeOwnerByOtherContent(
+      String otherContent,
+      UserContext userContext,
+      String newOwner) {
+
+    Criteria accessCriteria = builder.buildUpdateOwnerCriteria(userContext);
+    Criteria otherContentCriteria = Criteria.where(ExampleEntity.OTHER_CONTENT).is(otherContent);
+    Query query = Query.query(new Criteria().andOperator(accessCriteria, otherContentCriteria));
+    Update update = builder.buildUpdate(newOwner);
+    FindAndModifyOptions options = new FindAndModifyOptions()
+        .returnNew(true);
+    return Optional
+        .ofNullable(mongoTemplate.findAndModify(query, update, options, ExampleEntity.class));
   }
 
 }

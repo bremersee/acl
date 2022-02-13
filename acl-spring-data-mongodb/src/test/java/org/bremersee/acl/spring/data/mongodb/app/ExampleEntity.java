@@ -31,9 +31,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @NoArgsConstructor
 public class ExampleEntity {
 
-  static final String ACL = "acl";
+  public static final String ACL = "acl";
 
-  static final String OTHER_CONTENT = "otherContent";
+  public static final String OTHER_CONTENT = "otherContent";
 
   @Id
   private String id;

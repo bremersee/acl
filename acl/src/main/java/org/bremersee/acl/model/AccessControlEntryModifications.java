@@ -22,8 +22,7 @@ import static org.bremersee.acl.model.AccessControlEntry.PERMISSION;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
@@ -93,8 +92,8 @@ public interface AccessControlEntryModifications extends
    */
   @Schema(description = "Users to be added.")
   @Value.Default
-  default Collection<String> getAddUsers() {
-    return List.of();
+  default Set<String> getAddUsers() {
+    return Set.of();
   }
 
   /**
@@ -104,8 +103,8 @@ public interface AccessControlEntryModifications extends
    */
   @Schema(description = "Users to be removed.")
   @Value.Default
-  default Collection<String> getRemoveUsers() {
-    return List.of();
+  default Set<String> getRemoveUsers() {
+    return Set.of();
   }
 
   /**
@@ -115,8 +114,8 @@ public interface AccessControlEntryModifications extends
    */
   @Schema(description = "Roles to be added.")
   @Value.Default
-  default Collection<String> getAddRoles() {
-    return List.of();
+  default Set<String> getAddRoles() {
+    return Set.of();
   }
 
   /**
@@ -126,8 +125,8 @@ public interface AccessControlEntryModifications extends
    */
   @Schema(description = "Roles to be removed.")
   @Value.Default
-  default Collection<String> getRemoveRoles() {
-    return List.of();
+  default Set<String> getRemoveRoles() {
+    return Set.of();
   }
 
   /**
@@ -137,8 +136,8 @@ public interface AccessControlEntryModifications extends
    */
   @Schema(description = "Groups to be added.")
   @Value.Default
-  default Collection<String> getAddGroups() {
-    return List.of();
+  default Set<String> getAddGroups() {
+    return Set.of();
   }
 
   /**
@@ -148,8 +147,8 @@ public interface AccessControlEntryModifications extends
    */
   @Schema(description = "Groups to be removed.")
   @Value.Default
-  default Collection<String> getRemoveGroups() {
-    return List.of();
+  default Set<String> getRemoveGroups() {
+    return Set.of();
   }
 
   @Override

@@ -16,10 +16,13 @@
 
 package org.bremersee.acl.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.validation.Valid;
 import org.immutables.value.Value;
 
@@ -52,6 +55,40 @@ public interface AccessControlListModifications {
   @Value.Default
   default Collection<AccessControlEntryModifications> getModifications() {
     return List.of();
+  }
+
+  @Schema(hidden = true)
+  @JsonIgnore
+  @Value.Derived
+  default Collection<AccessControlEntryModifications> getModificationsDistinct() {
+    return getModifications()
+        .stream()
+        .collect(Collectors.toMap(
+            AccessControlEntryModifications::getPermission,
+            mod -> mod,
+            (first, second) -> AccessControlEntryModifications.builder()
+                .from(first)
+                .isGuest(first.isGuest() && second.isGuest())
+                .addUsers(Stream
+                    .concat(first.getAddUsers().stream(), second.getAddUsers().stream())
+                    .collect(Collectors.toSet()))
+                .removeUsers(Stream
+                    .concat(first.getRemoveUsers().stream(), second.getRemoveUsers().stream())
+                    .collect(Collectors.toSet()))
+                .addRoles(Stream
+                    .concat(first.getAddRoles().stream(), second.getAddRoles().stream())
+                    .collect(Collectors.toSet()))
+                .removeRoles(Stream
+                    .concat(first.getRemoveRoles().stream(), second.getRemoveRoles().stream())
+                    .collect(Collectors.toSet()))
+                .addGroups(Stream
+                    .concat(first.getAddGroups().stream(), second.getAddGroups().stream())
+                    .collect(Collectors.toSet()))
+                .removeGroups(Stream
+                    .concat(first.getRemoveGroups().stream(), second.getRemoveGroups().stream())
+                    .collect(Collectors.toSet()))
+                .build()))
+        .values();
   }
 
 }
