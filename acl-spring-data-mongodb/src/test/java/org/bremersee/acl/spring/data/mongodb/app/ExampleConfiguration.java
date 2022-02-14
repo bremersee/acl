@@ -16,18 +16,12 @@
 
 package org.bremersee.acl.spring.data.mongodb.app;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.bremersee.acl.spring.data.mongodb.convert.AceToDocumentConverter;
-import org.bremersee.acl.spring.data.mongodb.convert.AclToDocumentConverter;
-import org.bremersee.acl.spring.data.mongodb.convert.DocumentToAceConverter;
-import org.bremersee.acl.spring.data.mongodb.convert.DocumentToAclConverter;
+import org.bremersee.acl.spring.data.mongodb.convert.AclConverters;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
@@ -50,12 +44,7 @@ public class ExampleConfiguration {
   @Primary
   @Bean
   public MongoCustomConversions customConversions() {
-    List<Converter<?, ?>> converters = new ArrayList<>();
-    converters.add(new AceToDocumentConverter());
-    converters.add(new AclToDocumentConverter());
-    converters.add(new DocumentToAceConverter());
-    converters.add(new DocumentToAclConverter());
-    return new MongoCustomConversions(converters);
+    return new MongoCustomConversions(AclConverters.getConvertersToRegister());
   }
 
 }

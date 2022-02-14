@@ -3,7 +3,6 @@ pipeline {
     label 'maven'
   }
   environment {
-    // CODECOV_TOKEN = credentials('common-xml-codecov-token')
     DEPLOY = false
     SNAPSHOT_SITE = false
     RELEASE_SITE = true
