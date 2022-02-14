@@ -53,6 +53,11 @@ public abstract class PermissionConstants {
   private PermissionConstants() {
   }
 
+  /**
+   * Gets all.
+   *
+   * @return the all
+   */
   public static Set<String> getAll() {
     return Set.of(
         ADMINISTRATION,

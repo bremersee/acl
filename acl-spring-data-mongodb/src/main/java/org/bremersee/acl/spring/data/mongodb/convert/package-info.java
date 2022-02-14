@@ -15,8 +15,8 @@
  */
 
 /**
- * The package contains the in-memory business logic of access control lists.
+ * The package contains the acl converters for MongoDB.
  *
  * @author Christian Bremer
  */
-package org.bremersee.acl;
+package org.bremersee.acl.spring.data.mongodb.convert;

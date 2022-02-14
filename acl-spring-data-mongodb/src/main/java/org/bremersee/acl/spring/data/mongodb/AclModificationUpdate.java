@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,37 +18,54 @@ package org.bremersee.acl.spring.data.mongodb;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ImplementationVisibility;
 import org.springframework.data.mongodb.core.query.Update;
 
 /**
+ * The acl modification update.
+ *
  * @author Christian Bremer
  */
 @Value.Immutable
 @Value.Style(visibility = ImplementationVisibility.PACKAGE)
-@Valid
 public interface AclModificationUpdate {
 
+  /**
+   * Creates acl modification update builder.
+   *
+   * @return the acl modification update builder
+   */
   static ImmutableAclModificationUpdate.Builder builder() {
     return ImmutableAclModificationUpdate.builder();
   }
 
-  @NotNull
+  /**
+   * Gets preparation updates.
+   *
+   * @return the preparation updates
+   */
   Collection<Update> getPreparationUpdates();
 
-  @NotNull
+  /**
+   * Gets final update.
+   *
+   * @return the final update
+   */
   Update getFinalUpdate();
 
+  /**
+   * Gets updates.
+   *
+   * @return the updates
+   */
   @Value.Derived
-  @NotNull
   default Collection<Update> getUpdates() {
     List<Update> updates = new ArrayList<>(getPreparationUpdates());
     updates.add(getFinalUpdate());
-    return updates;
+    return Collections.unmodifiableCollection(updates);
   }
 
 }

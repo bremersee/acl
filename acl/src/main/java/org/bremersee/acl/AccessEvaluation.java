@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,27 @@
 package org.bremersee.acl;
 
 /**
+ * The access evaluation type.
+ *
  * @author Christian Bremer
  */
 public enum AccessEvaluation {
+
+  /**
+   * All permissions access evaluation.
+   */
   ALL_PERMISSIONS,
+
+  /**
+   * Any permission access evaluation.
+   */
   ANY_PERMISSION;
 
+  /**
+   * Is any permission sufficient.
+   *
+   * @return the boolean
+   */
   public boolean isAnyPermission() {
     return this == ANY_PERMISSION;
   }

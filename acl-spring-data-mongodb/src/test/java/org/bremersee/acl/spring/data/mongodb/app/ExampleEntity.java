@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
+ * The example entity.
+ *
  * @author Christian Bremer
  */
 @Document(collection = "alc-example-collection")
@@ -31,8 +33,14 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @NoArgsConstructor
 public class ExampleEntity {
 
+  /**
+   * The constant ACL.
+   */
   public static final String ACL = "acl";
 
+  /**
+   * The constant OTHER_CONTENT.
+   */
   public static final String OTHER_CONTENT = "otherContent";
 
   @Id

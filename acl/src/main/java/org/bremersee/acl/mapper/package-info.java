@@ -15,8 +15,9 @@
  */
 
 /**
- * The package contains the in-memory business logic of access control lists.
+ * The package contains acl mappers to convert business objects to data transfer objects and vice
+ * versa.
  *
  * @author Christian Bremer
  */
-package org.bremersee.acl;
+package org.bremersee.acl.mapper;

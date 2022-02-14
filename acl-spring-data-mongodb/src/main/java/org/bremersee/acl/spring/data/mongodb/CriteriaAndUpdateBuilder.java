@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import org.bremersee.acl.AccessEvaluation;
 import org.bremersee.acl.Ace;
 import org.bremersee.acl.Acl;
@@ -34,23 +32,38 @@ import org.bremersee.acl.model.AccessControlEntryModifications;
 import org.bremersee.acl.model.AccessControlListModifications;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.util.Assert;
 
 /**
+ * The criteria and update builder.
+ *
  * @author Christian Bremer
  */
 public class CriteriaAndUpdateBuilder {
 
   private final String aclPath;
 
+  /**
+   * Instantiates a new criteria and update builder.
+   *
+   * @param aclPath the acl path
+   */
   public CriteriaAndUpdateBuilder(String aclPath) {
     this.aclPath = Objects.isNull(aclPath) ? "" : aclPath;
   }
 
+  /**
+   * Build update acl modification update.
+   *
+   * @param accessControlListModifications the access control list modifications
+   * @return the acl modification update
+   */
   public AclModificationUpdate buildUpdate(
-      @NotNull AccessControlListModifications accessControlListModifications) {
+      AccessControlListModifications accessControlListModifications) {
 
-    Collection<AccessControlEntryModifications> mods = accessControlListModifications
-        .getModificationsDistinct();
+    Collection<AccessControlEntryModifications> mods = isEmpty(accessControlListModifications)
+        ? List.of()
+        : accessControlListModifications.getModificationsDistinct();
 
     Update addAndSetUpdate = new Update();
     Update removeUpdate = new Update();
@@ -107,22 +120,53 @@ public class CriteriaAndUpdateBuilder {
         .build();
   }
 
+  /**
+   * Build update.
+   *
+   * @param acl the acl
+   * @return the update
+   */
   public Update buildUpdate(Acl acl) {
     return Update.update(path(), isEmpty(acl) ? Acl.builder().build() : acl);
   }
 
+  /**
+   * Build update.
+   *
+   * @param newOwner the new owner
+   * @return the update
+   */
   public Update buildUpdate(String newOwner) {
-    return Update.update(path(Acl.OWNER), newOwner);
+    return Update.update(path(Acl.OWNER), isEmpty(newOwner) ? "" : newOwner);
   }
 
-  public Criteria buildUpdateOwnerCriteria(@NotNull UserContext userContext) {
+  /**
+   * Build update owner criteria.
+   *
+   * @param userContext the user context
+   * @return the criteria
+   */
+  public Criteria buildUpdateOwnerCriteria(UserContext userContext) {
+    Assert.notNull(userContext, "User context must be present.");
     return Criteria.where(path(Acl.OWNER)).is(userContext.getName());
   }
 
+  /**
+   * Build permission criteria.
+   *
+   * @param userContext the user context
+   * @param accessEvaluation the access evaluation
+   * @param permissions the permissions
+   * @return the criteria
+   */
   public Criteria buildPermissionCriteria(
-      @NotNull UserContext userContext,
-      @NotNull AccessEvaluation accessEvaluation,
-      @NotEmpty Collection<String> permissions) {
+      UserContext userContext,
+      AccessEvaluation accessEvaluation,
+      Collection<String> permissions) {
+
+    Assert.notNull(userContext, "User context must be present.");
+    Assert.notNull(accessEvaluation, "Access evaluation type must be present.");
+    Assert.notEmpty(permissions, "At least one permission must be present.");
 
     List<Criteria> permissionCriteriaList = Set.copyOf(permissions).stream()
         .map(permission -> createAccessCriteria(userContext, permission))

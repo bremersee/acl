@@ -20,7 +20,7 @@ import org.bremersee.acl.Acl;
 import org.bremersee.acl.model.AccessControlList;
 
 /**
- * The acl mapper interface.
+ * The acl mapper.
  *
  * @param <T> the acl type
  * @author Christian Bremer
@@ -36,7 +36,7 @@ public interface AclMapper<T extends Acl> {
   AccessControlList map(T acl);
 
   /**
-   * Map access control list dto to entity.
+   * Map access control list dto to business object.
    *
    * @param accessControlList the access control list
    * @return the acl of the specified type

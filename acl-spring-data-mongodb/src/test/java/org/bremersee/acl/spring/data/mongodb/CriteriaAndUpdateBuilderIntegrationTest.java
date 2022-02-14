@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 /**
+ * The criteria and update builder integration test.
+ *
  * @author Christian Bremer
  */
 @SpringBootTest(
@@ -51,9 +53,17 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 @ExtendWith(SoftAssertionsExtension.class)
 public class CriteriaAndUpdateBuilderIntegrationTest {
 
+  /**
+   * The repository.
+   */
   @Autowired
   ExampleEntityRepository repository;
 
+  /**
+   * Save and find.
+   *
+   * @param softly the softly
+   */
   @Test
   void saveAndFind(SoftAssertions softly) {
     Acl acl = Acl.builder()
@@ -146,6 +156,11 @@ public class CriteriaAndUpdateBuilderIntegrationTest {
         .hasValue(expected);
   }
 
+  /**
+   * Modify acl.
+   *
+   * @param softly the softly
+   */
   @Test
   void modifyAcl(SoftAssertions softly) {
     Acl acl = Acl.builder()
@@ -216,6 +231,11 @@ public class CriteriaAndUpdateBuilderIntegrationTest {
         .hasValue(expected);
   }
 
+  /**
+   * Replace acl.
+   *
+   * @param softly the softly
+   */
   @Test
   void replaceAcl(SoftAssertions softly) {
     Acl acl = Acl.builder()
@@ -251,6 +271,11 @@ public class CriteriaAndUpdateBuilderIntegrationTest {
         .hasValue(expected);
   }
 
+  /**
+   * Change owner.
+   *
+   * @param softly the softly
+   */
   @Test
   void changeOwner(SoftAssertions softly) {
     Acl acl = Acl.builder()

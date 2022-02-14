@@ -15,8 +15,8 @@
  */
 
 /**
- * The package contains the in-memory business logic of access control lists.
+ * The package contains acl data transfer objects.
  *
  * @author Christian Bremer
  */
-package org.bremersee.acl;
+package org.bremersee.acl.model;

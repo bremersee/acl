@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,30 +23,55 @@ import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
 
 /**
+ * The user context.
+ *
  * @author Christian Bremer
  */
 @Value.Immutable
 @Valid
 public interface UserContext {
 
+  /**
+   * The constant ANONYMOUS.
+   */
   String ANONYMOUS = "";
 
+  /**
+   * Creates new user context builder.
+   *
+   * @return the user context builder
+   */
   static ImmutableUserContext.Builder builder() {
     return ImmutableUserContext.builder();
   }
 
+  /**
+   * Gets name.
+   *
+   * @return the name
+   */
   @Value.Default
   @NotNull
   default String getName() {
     return ANONYMOUS;
   }
 
+  /**
+   * Gets roles.
+   *
+   * @return the roles
+   */
   @Value.Default
   @NotNull
   default Collection<String> getRoles() {
     return List.of();
   }
 
+  /**
+   * Gets groups.
+   *
+   * @return the groups
+   */
   @Value.Default
   @NotNull
   default Collection<String> getGroups() {

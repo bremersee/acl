@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,16 +28,35 @@ import org.bremersee.acl.model.AccessControlEntry;
 import org.bremersee.acl.model.AccessControlList;
 
 /**
+ * The abstract acl mapper.
+ *
+ * @param <T> the type parameter
  * @author Christian Bremer
  */
 public abstract class AbstractAclMapper<T extends Acl> implements AclMapper<T> {
 
+  /**
+   * The default permissions.
+   */
   protected final Set<String> defaultPermissions;
 
+  /**
+   * The hide admin roles.
+   */
   protected final boolean hideAdminRoles;
 
+  /**
+   * The admin roles.
+   */
   protected Set<String> adminRoles;
 
+  /**
+   * Instantiates a new abstract acl mapper.
+   *
+   * @param defaultPermissions the default permissions
+   * @param hideAdminRoles the hide admin roles
+   * @param adminRoles the admin roles
+   */
   public AbstractAclMapper(
       String[] defaultPermissions,
       boolean hideAdminRoles,
@@ -56,7 +75,7 @@ public abstract class AbstractAclMapper<T extends Acl> implements AclMapper<T> {
     source = Acl.builder()
         .from(source)
         .addPermissions(defaultPermissions)
-        .removeGroups(hideAdminRoles ? adminRoles : List.of())
+        .removeRoles(hideAdminRoles ? adminRoles : List.of())
         .build();
     return AccessControlList.builder()
         .owner(source.getOwner())

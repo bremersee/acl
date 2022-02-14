@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
- * The access controller.
+ * The access evaluator.
  *
  * @author Christian Bremer
  */
@@ -32,10 +32,10 @@ import javax.validation.constraints.NotNull;
 public interface AccessEvaluator {
 
   /**
-   * Creates an access controller from the given access control list.
+   * Creates an access evaluator from the given access control list.
    *
    * @param acl the access control list
-   * @return the access controller
+   * @return the access evaluator
    */
   static AccessEvaluator of(Acl acl) {
     return new Impl(acl);
@@ -77,14 +77,16 @@ public interface AccessEvaluator {
   }
 
   /**
-   * The default access controller implementation.
+   * The default access evaluator implementation.
+   *
+   * @author Christian Bremer
    */
   class Impl implements AccessEvaluator {
 
     private final Acl acl;
 
     /**
-     * Instantiates a new access controller.
+     * Instantiates a new access evaluator.
      *
      * @param acl the acl
      */

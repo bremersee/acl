@@ -58,11 +58,21 @@ public interface Ace {
    */
   String GROUPS = "groups";
 
+  /**
+   * Builder ace builder.
+   *
+   * @return the ace builder
+   */
   @NotNull
   static AceBuilder builder() {
     return new AceBuilder();
   }
 
+  /**
+   * Empty ace.
+   *
+   * @return the ace
+   */
   @NotNull
   static Ace empty() {
     return builder().build();
@@ -99,6 +109,11 @@ public interface Ace {
   @NotNull
   SortedSet<String> getGroups();
 
+  /**
+   * The ace builder.
+   *
+   * @author Christian Bremer
+   */
   @SuppressWarnings("SameNameButDifferent")
   @ToString
   @EqualsAndHashCode
@@ -112,6 +127,12 @@ public interface Ace {
 
     private final TreeSet<String> groups = new TreeSet<>(String::compareToIgnoreCase);
 
+    /**
+     * From ace builder.
+     *
+     * @param ace the ace
+     * @return the ace builder
+     */
     public AceBuilder from(Ace ace) {
       if (nonNull(ace)) {
         guest(ace.isGuest());
@@ -122,16 +143,34 @@ public interface Ace {
       return this;
     }
 
+    /**
+     * Guest ace builder.
+     *
+     * @param isGuest the is guest
+     * @return the ace builder
+     */
     public AceBuilder guest(boolean isGuest) {
       this.guest = isGuest;
       return this;
     }
 
+    /**
+     * Users ace builder.
+     *
+     * @param users the users
+     * @return the ace builder
+     */
     public AceBuilder users(Collection<String> users) {
       this.users.clear();
       return addUsers(nonNull(users) ? users : List.of());
     }
 
+    /**
+     * Add users ace builder.
+     *
+     * @param users the users
+     * @return the ace builder
+     */
     public AceBuilder addUsers(Collection<String> users) {
       if (nonNull(users)) {
         users.stream()
@@ -141,6 +180,12 @@ public interface Ace {
       return this;
     }
 
+    /**
+     * Remove users ace builder.
+     *
+     * @param users the users
+     * @return the ace builder
+     */
     public AceBuilder removeUsers(Collection<String> users) {
       if (nonNull(users)) {
         users.stream()
@@ -150,11 +195,23 @@ public interface Ace {
       return this;
     }
 
+    /**
+     * Roles ace builder.
+     *
+     * @param roles the roles
+     * @return the ace builder
+     */
     public AceBuilder roles(Collection<String> roles) {
       this.roles.clear();
       return addRoles(nonNull(roles) ? roles : List.of());
     }
 
+    /**
+     * Add roles ace builder.
+     *
+     * @param roles the roles
+     * @return the ace builder
+     */
     public AceBuilder addRoles(Collection<String> roles) {
       if (nonNull(roles)) {
         roles.stream()
@@ -164,6 +221,12 @@ public interface Ace {
       return this;
     }
 
+    /**
+     * Remove roles ace builder.
+     *
+     * @param roles the roles
+     * @return the ace builder
+     */
     public AceBuilder removeRoles(Collection<String> roles) {
       if (nonNull(roles)) {
         roles.stream()
@@ -173,11 +236,23 @@ public interface Ace {
       return this;
     }
 
+    /**
+     * Groups ace builder.
+     *
+     * @param groups the groups
+     * @return the ace builder
+     */
     public AceBuilder groups(Collection<String> groups) {
       this.groups.clear();
       return addGroups(nonNull(groups) ? groups : List.of());
     }
 
+    /**
+     * Add groups ace builder.
+     *
+     * @param groups the groups
+     * @return the ace builder
+     */
     public AceBuilder addGroups(Collection<String> groups) {
       if (nonNull(groups)) {
         groups.stream()
@@ -187,6 +262,12 @@ public interface Ace {
       return this;
     }
 
+    /**
+     * Remove groups ace builder.
+     *
+     * @param groups the groups
+     * @return the ace builder
+     */
     public AceBuilder removeGroups(Collection<String> groups) {
       if (nonNull(groups)) {
         groups.stream()
@@ -196,12 +277,22 @@ public interface Ace {
       return this;
     }
 
+    /**
+     * Build ace.
+     *
+     * @return the ace
+     */
     public Ace build() {
       return new AceImpl(guest, users, roles, groups);
     }
 
   }
 
+  /**
+   * The ace implementation.
+   *
+   * @author Christian Bremer
+   */
   @SuppressWarnings("SameNameButDifferent")
   @Getter
   @ToString

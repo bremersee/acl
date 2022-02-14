@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,19 @@ import org.bremersee.acl.model.AccessControlEntry;
 import org.bremersee.acl.model.AccessControlList;
 
 /**
+ * The default acl mapper.
+ *
  * @author Christian Bremer
  */
 public class DefaultAclMapper extends AbstractAclMapper<Acl> {
 
+  /**
+   * Instantiates a new default acl mapper.
+   *
+   * @param defaultPermissions the default permissions
+   * @param hideAdminRoles the hide admin roles
+   * @param adminRoles the admin roles
+   */
   public DefaultAclMapper(
       String[] defaultPermissions,
       boolean hideAdminRoles,
@@ -56,7 +65,7 @@ public class DefaultAclMapper extends AbstractAclMapper<Acl> {
                     .build()))
         )
         .addPermissions(defaultPermissions)
-        .addGroups(hideAdminRoles ? adminRoles : List.of())
+        .addRoles(hideAdminRoles ? adminRoles : List.of())
         .build();
   }
 

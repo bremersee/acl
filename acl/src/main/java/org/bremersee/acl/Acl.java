@@ -45,14 +45,33 @@ import org.bremersee.acl.model.AccessControlListModifications;
 @Valid
 public interface Acl {
 
+  /**
+   * The constant OWNER.
+   */
   String OWNER = "owner";
 
+  /**
+   * The constant ENTRIES.
+   */
   String ENTRIES = "entries";
 
+  /**
+   * Builder acl builder.
+   *
+   * @return the acl builder
+   */
   static AclBuilder builder() {
     return new AclBuilder();
   }
 
+  /**
+   * With acl.
+   *
+   * @param owner the owner
+   * @param defaultPermissions the default permissions
+   * @param adminRoles the admin roles
+   * @return the acl
+   */
   static Acl with(
       String owner,
       Collection<String> defaultPermissions,
@@ -77,6 +96,16 @@ public interface Acl {
   @NotNull
   SortedMap<String, Ace> getPermissionMap();
 
+  /**
+   * Modifies the access control list. If the modification forbidden, an empty optional will be
+   * returned, otherwise the modified access control list.
+   *
+   * @param mods the modifications
+   * @param userContext the user context
+   * @param accessEvaluation the access evaluation
+   * @param permissions the permissions
+   * @return the optional
+   */
   default Optional<Acl> modify(
       @NotNull AccessControlListModifications mods,
       @NotNull UserContext userContext,
@@ -90,6 +119,11 @@ public interface Acl {
         : Optional.empty();
   }
 
+  /**
+   * The al builder.
+   *
+   * @author Christian Bremer
+   */
   @SuppressWarnings("SameNameButDifferent")
   @ToString
   @EqualsAndHashCode
@@ -99,6 +133,9 @@ public interface Acl {
 
     private final Map<String, Ace> permissionMap = new HashMap<>();
 
+    /**
+     * Instantiates a new acl builder.
+     */
     public AclBuilder() {
       super();
     }
@@ -114,6 +151,12 @@ public interface Acl {
       }
     }
 
+    /**
+     * From acl.
+     *
+     * @param acl the acl
+     * @return the acl builder
+     */
     public AclBuilder from(Acl acl) {
       if (nonNull(acl)) {
         owner(acl.getOwner());
@@ -122,11 +165,23 @@ public interface Acl {
       return this;
     }
 
+    /**
+     * Owner.
+     *
+     * @param owner the owner
+     * @return the acl builder
+     */
     public AclBuilder owner(String owner) {
       this.owner = owner;
       return this;
     }
 
+    /**
+     * Permission map.
+     *
+     * @param permissionMap the permission map
+     * @return the acl builder
+     */
     public AclBuilder permissionMap(Map<String, ? extends Ace> permissionMap) {
       this.permissionMap.clear();
       if (nonNull(permissionMap)) {
@@ -146,6 +201,12 @@ public interface Acl {
       return this;
     }
 
+    /**
+     * Add permissions.
+     *
+     * @param permissions the permissions
+     * @return the acl builder
+     */
     public AclBuilder addPermissions(Collection<String> permissions) {
       return Optional.ofNullable(permissions)
           .stream()
@@ -155,6 +216,12 @@ public interface Acl {
           .orElse(this);
     }
 
+    /**
+     * Remove permissions.
+     *
+     * @param permissions the permissions
+     * @return the acl builder
+     */
     public AclBuilder removePermissions(Collection<String> permissions) {
       if (nonNull(permissions)) {
         permissions.forEach(this.permissionMap::remove);
@@ -162,10 +229,23 @@ public interface Acl {
       return this;
     }
 
+    /**
+     * Guest.
+     *
+     * @param guest the guest
+     * @return the acl builder
+     */
     public AclBuilder guest(boolean guest) {
       return guest(p -> true, guest);
     }
 
+    /**
+     * Guest.
+     *
+     * @param permissionFilter the permission filter
+     * @param guest the guest
+     * @return the acl builder
+     */
     public AclBuilder guest(Predicate<String> permissionFilter, boolean guest) {
       Predicate<String> filter = nonNull(permissionFilter) ? permissionFilter : p -> true;
       return permissionMap.keySet().stream()
@@ -175,14 +255,34 @@ public interface Acl {
           .orElse(this);
     }
 
+    /**
+     * Guest.
+     *
+     * @param permission the permission
+     * @param guest the guest
+     * @return the acl builder
+     */
     public AclBuilder guest(String permission, boolean guest) {
       return doWithAce(permission, ace -> Ace.builder().from(ace).guest(guest).build());
     }
 
+    /**
+     * Add users.
+     *
+     * @param users the users
+     * @return the acl builder
+     */
     public AclBuilder addUsers(Collection<String> users) {
       return addUsers(p -> true, users);
     }
 
+    /**
+     * Add users.
+     *
+     * @param permissionFilter the permission filter
+     * @param users the users
+     * @return the acl builder
+     */
     public AclBuilder addUsers(Predicate<String> permissionFilter, Collection<String> users) {
       Predicate<String> filter = nonNull(permissionFilter) ? permissionFilter : p -> true;
       return permissionMap.keySet().stream()
@@ -192,6 +292,13 @@ public interface Acl {
           .orElse(this);
     }
 
+    /**
+     * Add users.
+     *
+     * @param permission the permission
+     * @param users the users
+     * @return the acl builder
+     */
     public AclBuilder addUsers(String permission, Collection<String> users) {
       if (nonNull(users)) {
         return doWithAce(permission, ace -> Ace.builder().from(ace).addUsers(users).build());
@@ -199,10 +306,23 @@ public interface Acl {
       return this;
     }
 
-    public AclBuilder removeGUsers(Collection<String> users) {
+    /**
+     * Remove users.
+     *
+     * @param users the users
+     * @return the acl builder
+     */
+    public AclBuilder removeUsers(Collection<String> users) {
       return removeUsers(p -> true, users);
     }
 
+    /**
+     * Remove users.
+     *
+     * @param permissionFilter the permission filter
+     * @param users the users
+     * @return the acl builder
+     */
     public AclBuilder removeUsers(Predicate<String> permissionFilter, Collection<String> users) {
       Predicate<String> filter = nonNull(permissionFilter) ? permissionFilter : p -> true;
       return permissionMap.keySet().stream()
@@ -212,6 +332,13 @@ public interface Acl {
           .orElse(this);
     }
 
+    /**
+     * Remove users.
+     *
+     * @param permission the permission
+     * @param users the users
+     * @return the acl builder
+     */
     public AclBuilder removeUsers(String permission, Collection<String> users) {
       if (nonNull(users)) {
         return doWithAce(permission, ace -> Ace.builder().from(ace).removeUsers(users).build());
@@ -219,10 +346,23 @@ public interface Acl {
       return this;
     }
 
+    /**
+     * Add roles.
+     *
+     * @param roles the roles
+     * @return the acl builder
+     */
     public AclBuilder addRoles(Collection<String> roles) {
       return addRoles(p -> true, roles);
     }
 
+    /**
+     * Add roles.
+     *
+     * @param permissionFilter the permission filter
+     * @param roles the roles
+     * @return the acl builder
+     */
     public AclBuilder addRoles(Predicate<String> permissionFilter, Collection<String> roles) {
       Predicate<String> filter = nonNull(permissionFilter) ? permissionFilter : p -> true;
       return permissionMap.keySet().stream()
@@ -232,6 +372,13 @@ public interface Acl {
           .orElse(this);
     }
 
+    /**
+     * Add roles.
+     *
+     * @param permission the permission
+     * @param roles the roles
+     * @return the acl builder
+     */
     public AclBuilder addRoles(String permission, Collection<String> roles) {
       if (nonNull(roles)) {
         return doWithAce(permission, ace -> Ace.builder().from(ace).addRoles(roles).build());
@@ -239,10 +386,23 @@ public interface Acl {
       return this;
     }
 
+    /**
+     * Remove roles.
+     *
+     * @param roles the roles
+     * @return the acl builder
+     */
     public AclBuilder removeRoles(Collection<String> roles) {
       return removeRoles(p -> true, roles);
     }
 
+    /**
+     * Remove roles.
+     *
+     * @param permissionFilter the permission filter
+     * @param roles the roles
+     * @return the acl builder
+     */
     public AclBuilder removeRoles(Predicate<String> permissionFilter, Collection<String> roles) {
       Predicate<String> filter = nonNull(permissionFilter) ? permissionFilter : p -> true;
       return permissionMap.keySet().stream()
@@ -252,6 +412,13 @@ public interface Acl {
           .orElse(this);
     }
 
+    /**
+     * Remove roles.
+     *
+     * @param permission the permission
+     * @param roles the roles
+     * @return the acl builder
+     */
     public AclBuilder removeRoles(String permission, Collection<String> roles) {
       if (nonNull(roles)) {
         return doWithAce(permission, ace -> Ace.builder().from(ace).removeRoles(roles).build());
@@ -259,10 +426,23 @@ public interface Acl {
       return this;
     }
 
+    /**
+     * Add groups.
+     *
+     * @param groups the groups
+     * @return the acl builder
+     */
     public AclBuilder addGroups(Collection<String> groups) {
       return addGroups(p -> true, groups);
     }
 
+    /**
+     * Add groups.
+     *
+     * @param permissionFilter the permission filter
+     * @param groups the groups
+     * @return the acl builder
+     */
     public AclBuilder addGroups(Predicate<String> permissionFilter, Collection<String> groups) {
       Predicate<String> filter = nonNull(permissionFilter) ? permissionFilter : p -> true;
       return permissionMap.keySet().stream()
@@ -272,6 +452,13 @@ public interface Acl {
           .orElse(this);
     }
 
+    /**
+     * Add groups.
+     *
+     * @param permission the permission
+     * @param groups the groups
+     * @return the acl builder
+     */
     public AclBuilder addGroups(String permission, Collection<String> groups) {
       if (nonNull(groups)) {
         return doWithAce(permission, ace -> Ace.builder().from(ace).addGroups(groups).build());
@@ -279,10 +466,23 @@ public interface Acl {
       return this;
     }
 
+    /**
+     * Remove groups.
+     *
+     * @param groups the groups
+     * @return the acl builder
+     */
     public AclBuilder removeGroups(Collection<String> groups) {
       return removeGroups(p -> true, groups);
     }
 
+    /**
+     * Remove groups.
+     *
+     * @param permissionFilter the permission filter
+     * @param groups the groups
+     * @return the acl builder
+     */
     public AclBuilder removeGroups(Predicate<String> permissionFilter, Collection<String> groups) {
       Predicate<String> filter = nonNull(permissionFilter) ? permissionFilter : p -> true;
       return permissionMap.keySet().stream()
@@ -292,6 +492,13 @@ public interface Acl {
           .orElse(this);
     }
 
+    /**
+     * Remove groups.
+     *
+     * @param permission the permission
+     * @param groups the groups
+     * @return the acl builder
+     */
     public AclBuilder removeGroups(String permission, Collection<String> groups) {
       if (nonNull(groups)) {
         return doWithAce(permission, ace -> Ace.builder().from(ace).removeGroups(groups).build());
@@ -299,6 +506,12 @@ public interface Acl {
       return this;
     }
 
+    /**
+     * Apply modifications.
+     *
+     * @param modifications the modifications
+     * @return the acl builder
+     */
     public AclBuilder apply(AccessControlListModifications modifications) {
       if (nonNull(modifications)) {
         modifications.getModificationsDistinct().forEach(aceMods -> {
@@ -314,11 +527,21 @@ public interface Acl {
       return this;
     }
 
+    /**
+     * Build acl.
+     *
+     * @return the acl
+     */
     public Acl build() {
       return new AclImpl(owner, permissionMap);
     }
   }
 
+  /**
+   * The acl implementation.
+   *
+   * @author Christian Bremer
+   */
   @SuppressWarnings("SameNameButDifferent")
   @Getter
   @ToString

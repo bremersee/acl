@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 /**
+ * The example entity repository.
+ *
  * @author Christian Bremer
  */
 public class ExampleEntityRepositoryImpl implements ExampleEntityRepositoryCustom {
@@ -41,6 +43,11 @@ public class ExampleEntityRepositoryImpl implements ExampleEntityRepositoryCusto
 
   private final MongoTemplate mongoTemplate;
 
+  /**
+   * Instantiates a new example entity repository.
+   *
+   * @param mongoTemplate the mongo template
+   */
   public ExampleEntityRepositoryImpl(MongoTemplate mongoTemplate) {
     this.mongoTemplate = mongoTemplate;
   }

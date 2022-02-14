@@ -14,16 +14,32 @@
  * limitations under the License.
  */
 
-package org.bremersee.acl.spring.data.mongodb.app;
+package org.bremersee.acl.model;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * The example entity repository.
+ * The access control list test.
  *
  * @author Christian Bremer
  */
-public interface ExampleEntityRepository
-    extends MongoRepository<ExampleEntity, String>, ExampleEntityRepositoryCustom {
+@ExtendWith(SoftAssertionsExtension.class)
+class AccessControlListTest {
 
+  /**
+   * Builder defaults.
+   *
+   * @param softly the softly
+   */
+  @Test
+  void builderDefaults(SoftAssertions softly) {
+    AccessControlList actual = AccessControlList.builder().build();
+    softly.assertThat(actual.getOwner())
+        .isEmpty();
+    softly.assertThat(actual.getEntries())
+        .isEmpty();
+  }
 }

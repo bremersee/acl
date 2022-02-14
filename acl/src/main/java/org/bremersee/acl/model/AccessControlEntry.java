@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
@@ -132,8 +133,8 @@ public interface AccessControlEntry extends Comparable<AccessControlEntry> {
   }
 
   @Override
-  default int compareTo(AccessControlEntry o) {
-    return new AccessControlEntryComparator().compare(this, o);
+  default int compareTo(@Nonnull AccessControlEntry o) {
+    return getPermission().compareToIgnoreCase(o.getPermission());
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,23 +24,57 @@ import org.bremersee.acl.UserContext;
 import org.bremersee.acl.model.AccessControlListModifications;
 
 /**
+ * The example entity repository custom.
+ *
  * @author Christian Bremer
  */
 public interface ExampleEntityRepositoryCustom {
 
+  /**
+   * Find by other content optional.
+   *
+   * @param otherContent the other content
+   * @param userContext the user context
+   * @param accessEvaluation the access evaluation
+   * @param permissions the permissions
+   * @return the optional
+   */
   Optional<ExampleEntity> findByOtherContent(
       String otherContent,
       UserContext userContext,
       AccessEvaluation accessEvaluation,
       Collection<String> permissions);
 
+  /**
+   * Modify acl by other content optional.
+   *
+   * @param otherContent the other content
+   * @param userContext the user context
+   * @param modifications the modifications
+   * @return the optional
+   */
   Optional<ExampleEntity> modifyAclByOtherContent(
       String otherContent,
       UserContext userContext,
       AccessControlListModifications modifications);
 
+  /**
+   * Replace acl by other content optional.
+   *
+   * @param otherContent the other content
+   * @param newAcl the new acl
+   * @return the optional
+   */
   Optional<ExampleEntity> replaceAclByOtherContent(String otherContent, Acl newAcl);
 
+  /**
+   * Change owner by other content optional.
+   *
+   * @param otherContent the other content
+   * @param userContext the user context
+   * @param newOwner the new owner
+   * @return the optional
+   */
   Optional<ExampleEntity> changeOwnerByOtherContent(
       String otherContent,
       UserContext userContext,
