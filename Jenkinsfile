@@ -64,10 +64,6 @@ pipeline {
       steps {
         sh 'mvn -B clean site-deploy'
       }
-      post {
-        always {
-        }
-      }
     }
     stage('Release Site') {
       when {
@@ -78,10 +74,6 @@ pipeline {
       }
       steps {
         sh 'mvn -B -P gh-pages-site clean site site:stage scm-publish:publish-scm'
-      }
-      post {
-        always {
-        }
       }
     }
     stage('Deploy Feature') {
