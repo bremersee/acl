@@ -24,6 +24,7 @@
   <modules>
     <module>acl</module>
     <module>acl-spring-data-mongodb</module>
+    <module>acl-spring-boot-autoconfigure</module>
   </modules>
 
   <properties>
@@ -31,7 +32,7 @@
     <!--suppress UnresolvedMavenProperty -->
     <gh-pages-staging-dir>${maven.multiModuleProjectDirectory}/target/staging</gh-pages-staging-dir>
 
-    <common-model.version>2.4.0-SNAPSHOT</common-model.version>
+    <common-autoconfigure.version>0.0.1-SNAPSHOT</common-autoconfigure.version>
     <jts.version>1.18.2</jts.version>
   </properties>
 
@@ -87,6 +88,11 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.bremersee</groupId>
+        <artifactId>common-spring-boot-autoconfigure</artifactId>
+        <version>${common-autoconfigure.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

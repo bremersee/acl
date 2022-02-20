@@ -24,8 +24,11 @@ import org.bremersee.acl.Acl;
 import org.bremersee.acl.PermissionConstants;
 import org.bremersee.acl.UserContext;
 import org.bremersee.acl.model.AccessControlListModifications;
+import org.bremersee.acl.spring.data.mongodb.AclCriteriaAndUpdateBuilder;
+import org.bremersee.acl.spring.data.mongodb.AclIndexOperations;
 import org.bremersee.acl.spring.data.mongodb.AclModificationUpdate;
-import org.bremersee.acl.spring.data.mongodb.CriteriaAndUpdateBuilder;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -39,7 +42,7 @@ import org.springframework.data.mongodb.core.query.Update;
  */
 public class ExampleEntityRepositoryImpl implements ExampleEntityRepositoryCustom {
 
-  private final CriteriaAndUpdateBuilder builder = new CriteriaAndUpdateBuilder(ExampleEntity.ACL);
+  private final AclCriteriaAndUpdateBuilder builder;
 
   private final MongoTemplate mongoTemplate;
 
@@ -50,6 +53,18 @@ public class ExampleEntityRepositoryImpl implements ExampleEntityRepositoryCusto
    */
   public ExampleEntityRepositoryImpl(MongoTemplate mongoTemplate) {
     this.mongoTemplate = mongoTemplate;
+    builder = new AclCriteriaAndUpdateBuilder(ExampleEntity.class);
+  }
+
+  /**
+   * Init.
+   */
+  @EventListener(ApplicationReadyEvent.class)
+  public void init() {
+    new AclIndexOperations(this.mongoTemplate).ensureAclIndexes(
+        ExampleEntity.class,
+        PermissionConstants.getAll(),
+        false);
   }
 
   @Override

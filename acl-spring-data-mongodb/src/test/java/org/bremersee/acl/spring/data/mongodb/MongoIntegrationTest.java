@@ -16,6 +16,8 @@
 
 package org.bremersee.acl.spring.data.mongodb;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,14 +32,19 @@ import org.bremersee.acl.model.AccessControlListModifications;
 import org.bremersee.acl.spring.data.mongodb.app.ExampleConfiguration;
 import org.bremersee.acl.spring.data.mongodb.app.ExampleEntity;
 import org.bremersee.acl.spring.data.mongodb.app.ExampleEntityRepository;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.IndexInfo;
 
 /**
- * The criteria and update builder integration test.
+ * The acl criteria and update builder integration test.
  *
  * @author Christian Bremer
  */
@@ -50,8 +57,16 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
         "spring.data.mongodb.auto-index-creation=false",
         "spring.mongodb.embedded.version=3.6.2"
     })
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(SoftAssertionsExtension.class)
-public class CriteriaAndUpdateBuilderIntegrationTest {
+public class MongoIntegrationTest {
+
+  /**
+   * The Mongo template.
+   */
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  @Autowired
+  MongoTemplate mongoTemplate;
 
   /**
    * The repository.
@@ -60,10 +75,52 @@ public class CriteriaAndUpdateBuilderIntegrationTest {
   ExampleEntityRepository repository;
 
   /**
+   * Index.
+   */
+  @Order(10)
+  @Test
+  void index() {
+    AclIndexOperations aclIndexOperations = new AclIndexOperations(mongoTemplate);
+    List<IndexInfo> actual = aclIndexOperations
+        .getAclIndexInfo("alc-example-collection", ExampleEntity.ACL);
+    assertThat(actual)
+        .hasSize(PermissionConstants.getAll().size() * 4 + 1)
+        .map(IndexInfo::getName)
+        .allMatch(indexName -> indexName
+            .startsWith(ExampleEntity.ACL + "." + Acl.OWNER) || indexName
+            .startsWith(ExampleEntity.ACL + "." + Acl.ENTRIES + "."));
+  }
+
+  /**
+   * Re index.
+   */
+  @Order(1000)
+  @Test
+  void reIndex() {
+    AclIndexOperations aclIndexOperations = new AclIndexOperations(mongoTemplate);
+    List<String> permissions = List.of(PermissionConstants.ADMINISTRATION);
+    aclIndexOperations.ensureAclIndexes(
+        "alc-example-collection",
+        ExampleEntity.ACL,
+        permissions,
+        true);
+    List<IndexInfo> actual = aclIndexOperations
+        .getAclIndexInfo(ExampleEntity.class);
+    assertThat(actual)
+        .hasSize(5)
+        .map(IndexInfo::getName)
+        .allMatch(indexName -> indexName
+            .startsWith(ExampleEntity.ACL + "." + Acl.OWNER) || indexName
+            .startsWith(ExampleEntity.ACL
+                + "." + Acl.ENTRIES + "." + PermissionConstants.ADMINISTRATION));
+  }
+
+  /**
    * Save and find.
    *
    * @param softly the softly
    */
+  @Order(100)
   @Test
   void saveAndFind(SoftAssertions softly) {
     Acl acl = Acl.builder()
@@ -161,6 +218,7 @@ public class CriteriaAndUpdateBuilderIntegrationTest {
    *
    * @param softly the softly
    */
+  @Order(110)
   @Test
   void modifyAcl(SoftAssertions softly) {
     Acl acl = Acl.builder()
@@ -236,6 +294,7 @@ public class CriteriaAndUpdateBuilderIntegrationTest {
    *
    * @param softly the softly
    */
+  @Order(120)
   @Test
   void replaceAcl(SoftAssertions softly) {
     Acl acl = Acl.builder()
@@ -276,6 +335,7 @@ public class CriteriaAndUpdateBuilderIntegrationTest {
    *
    * @param softly the softly
    */
+  @Order(130)
   @Test
   void changeOwner(SoftAssertions softly) {
     Acl acl = Acl.builder()

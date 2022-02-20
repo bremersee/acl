@@ -19,6 +19,7 @@ package org.bremersee.acl.spring.data.mongodb.app;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bremersee.acl.Acl;
+import org.bremersee.acl.annotation.AclHolder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -29,6 +30,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author Christian Bremer
  */
 @Document(collection = "alc-example-collection")
+@AclHolder(path = "acl")
 @Data
 @NoArgsConstructor
 public class ExampleEntity {

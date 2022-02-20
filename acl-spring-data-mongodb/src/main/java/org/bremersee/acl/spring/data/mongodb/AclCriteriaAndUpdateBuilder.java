@@ -16,18 +16,21 @@
 
 package org.bremersee.acl.spring.data.mongodb;
 
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.bremersee.acl.AccessEvaluation;
 import org.bremersee.acl.Ace;
 import org.bremersee.acl.Acl;
 import org.bremersee.acl.UserContext;
+import org.bremersee.acl.annotation.AclHolder;
 import org.bremersee.acl.model.AccessControlEntryModifications;
 import org.bremersee.acl.model.AccessControlListModifications;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -35,21 +38,37 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.util.Assert;
 
 /**
- * The criteria and update builder.
+ * The acl criteria and update builder.
  *
  * @author Christian Bremer
  */
-public class CriteriaAndUpdateBuilder {
+public class AclCriteriaAndUpdateBuilder {
 
   private final String aclPath;
 
   /**
-   * Instantiates a new criteria and update builder.
+   * Instantiates a new acl criteria and update builder.
    *
    * @param aclPath the acl path
    */
-  public CriteriaAndUpdateBuilder(String aclPath) {
+  public AclCriteriaAndUpdateBuilder(String aclPath) {
     this.aclPath = Objects.isNull(aclPath) ? "" : aclPath;
+  }
+
+  /**
+   * Instantiates a new acl criteria and update builder.
+   *
+   * @param entityClass the entity class
+   */
+  public AclCriteriaAndUpdateBuilder(Class<?> entityClass) {
+    Assert.notNull(entityClass, "Entity class must be present.");
+    this.aclPath = Optional
+        .ofNullable(findAnnotation(entityClass, AclHolder.class))
+        .map(AclHolder::path)
+        .orElseThrow(() -> new IllegalArgumentException(String
+            .format(
+                "Entity class %s must be annotated with %s.",
+                entityClass.getSimpleName(), AclHolder.class.getSimpleName())));
   }
 
   /**
