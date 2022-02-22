@@ -22,7 +22,7 @@ import java.util.Optional;
 import org.bremersee.acl.AccessEvaluation;
 import org.bremersee.acl.Acl;
 import org.bremersee.acl.PermissionConstants;
-import org.bremersee.acl.UserContext;
+import org.bremersee.acl.AclUserContext;
 import org.bremersee.acl.model.AccessControlListModifications;
 import org.bremersee.acl.spring.data.mongodb.AclCriteriaAndUpdateBuilder;
 import org.bremersee.acl.spring.data.mongodb.AclIndexOperations;
@@ -70,7 +70,7 @@ public class ExampleEntityRepositoryImpl implements ExampleEntityRepositoryCusto
   @Override
   public Optional<ExampleEntity> findByOtherContent(
       String otherContent,
-      UserContext userContext,
+      AclUserContext userContext,
       AccessEvaluation accessEvaluation,
       Collection<String> permissions) {
 
@@ -86,7 +86,7 @@ public class ExampleEntityRepositoryImpl implements ExampleEntityRepositoryCusto
   @Override
   public Optional<ExampleEntity> modifyAclByOtherContent(
       String otherContent,
-      UserContext userContext,
+      AclUserContext userContext,
       AccessControlListModifications modifications) {
 
     Criteria accessCriteria = builder.buildPermissionCriteria(
@@ -122,7 +122,7 @@ public class ExampleEntityRepositoryImpl implements ExampleEntityRepositoryCusto
   @Override
   public Optional<ExampleEntity> changeOwnerByOtherContent(
       String otherContent,
-      UserContext userContext,
+      AclUserContext userContext,
       String newOwner) {
 
     Criteria accessCriteria = builder.buildUpdateOwnerCriteria(userContext);

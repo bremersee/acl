@@ -86,7 +86,7 @@ class AclTest {
                     .build()
             ))
             .build(),
-        UserContext.builder()
+        AclUserContext.builder()
             .name("anna")
             .build(),
         AccessEvaluation.ALL_PERMISSIONS,
@@ -121,7 +121,7 @@ class AclTest {
                     .build()
             ))
             .build(),
-        UserContext.builder()
+        AclUserContext.builder()
             .name("james")
             .build(),
         AccessEvaluation.ANY_PERMISSION,
@@ -144,7 +144,7 @@ class AclTest {
         .build();
     Optional<Acl> actual = target.modify(
         AccessControlListModifications.builder().build(),
-        UserContext.builder().build(),
+        AclUserContext.builder().build(),
         AccessEvaluation.ANY_PERMISSION,
         List.of(PermissionConstants.ADMINISTRATION));
     assertThat(actual)

@@ -17,7 +17,7 @@
 package org.bremersee.acl;
 
 import static java.util.Objects.isNull;
-import static org.bremersee.acl.UserContext.ANONYMOUS;
+import static org.bremersee.acl.AclUserContext.ANONYMOUS;
 
 import java.util.Collection;
 import javax.validation.Valid;
@@ -50,7 +50,7 @@ public interface AccessEvaluator {
    * @return {@code true} if the user has the permission, otherwise {@code false}
    */
   boolean hasPermission(
-      @NotNull UserContext userContext,
+      @NotNull AclUserContext userContext,
       String permission);
 
   /**
@@ -63,7 +63,7 @@ public interface AccessEvaluator {
    * @return {@code true} if the user has the permissions, otherwise {@code false}
    */
   default boolean hasPermissions(
-      @NotNull UserContext userContext,
+      @NotNull AclUserContext userContext,
       @NotNull AccessEvaluation accessEvaluation,
       @NotNull Collection<String> permissions) {
 
@@ -96,7 +96,7 @@ public interface AccessEvaluator {
 
     @Override
     public boolean hasPermission(
-        UserContext userContext,
+        AclUserContext userContext,
         String permission) {
 
       if (isNull(acl)) {

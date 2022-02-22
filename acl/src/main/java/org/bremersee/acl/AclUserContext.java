@@ -23,13 +23,13 @@ import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
 
 /**
- * The user context.
+ * The acl user context.
  *
  * @author Christian Bremer
  */
 @Value.Immutable
 @Valid
-public interface UserContext {
+public interface AclUserContext {
 
   /**
    * The constant ANONYMOUS.
@@ -41,8 +41,8 @@ public interface UserContext {
    *
    * @return the user context builder
    */
-  static ImmutableUserContext.Builder builder() {
-    return ImmutableUserContext.builder();
+  static ImmutableAclUserContext.Builder builder() {
+    return ImmutableAclUserContext.builder();
   }
 
   /**

@@ -39,7 +39,7 @@ class AccessEvaluatorTest {
     assertThat(
         AccessEvaluator
             .of(null)
-            .hasPermission(UserContext.builder().build(), ""))
+            .hasPermission(AclUserContext.builder().build(), ""))
         .isFalse();
   }
 
@@ -51,7 +51,7 @@ class AccessEvaluatorTest {
     assertThat(
         AccessEvaluator
             .of(Acl.builder().build())
-            .hasPermission(UserContext.builder().build(), null))
+            .hasPermission(AclUserContext.builder().build(), null))
         .isFalse();
   }
 
@@ -63,7 +63,7 @@ class AccessEvaluatorTest {
     assertThat(
         AccessEvaluator
             .of(Acl.builder().owner("junit").build())
-            .hasPermission(UserContext.builder().name("junit").build(), ""))
+            .hasPermission(AclUserContext.builder().name("junit").build(), ""))
         .isTrue();
   }
 
@@ -75,7 +75,7 @@ class AccessEvaluatorTest {
     assertThat(
         AccessEvaluator
             .of(Acl.builder().owner("anna").addPermissions(List.of("read")).guest(true).build())
-            .hasPermission(UserContext.builder().name("junit").build(), "read"))
+            .hasPermission(AclUserContext.builder().name("junit").build(), "read"))
         .isTrue();
   }
 
@@ -87,7 +87,7 @@ class AccessEvaluatorTest {
     assertThat(
         AccessEvaluator
             .of(Acl.builder().owner("anna").addUsers("read", List.of("junit")).build())
-            .hasPermission(UserContext.builder().name("junit").build(), "read"))
+            .hasPermission(AclUserContext.builder().name("junit").build(), "read"))
         .isTrue();
   }
 
@@ -100,7 +100,7 @@ class AccessEvaluatorTest {
         AccessEvaluator
             .of(Acl.builder().owner("anna").addRoles("read", List.of("aRole")).build())
             .hasPermission(
-                UserContext.builder().name("junit").roles(List.of("aRole")).build(),
+                AclUserContext.builder().name("junit").roles(List.of("aRole")).build(),
                 "read"))
         .isTrue();
   }
@@ -114,7 +114,7 @@ class AccessEvaluatorTest {
         AccessEvaluator
             .of(Acl.builder().owner("anna").addGroups("read", List.of("aGroup")).build())
             .hasPermission(
-                UserContext.builder().name("junit").groups(List.of("aGroup")).build(),
+                AclUserContext.builder().name("junit").groups(List.of("aGroup")).build(),
                 "read"))
         .isTrue();
   }
@@ -128,7 +128,7 @@ class AccessEvaluatorTest {
         AccessEvaluator
             .of(Acl.builder().owner("anna").addGroups("read", List.of("aGroup")).build())
             .hasPermissions(
-                UserContext.builder().name("junit").groups(List.of("aGroup")).build(),
+                AclUserContext.builder().name("junit").groups(List.of("aGroup")).build(),
                 AccessEvaluation.ANY_PERMISSION,
                 List.of("delete", "write", "read")))
         .isTrue();
@@ -147,7 +147,7 @@ class AccessEvaluatorTest {
                 .addGroups("write", List.of("aGroup"))
                 .build())
             .hasPermissions(
-                UserContext.builder().name("junit").groups(List.of("aGroup")).build(),
+                AclUserContext.builder().name("junit").groups(List.of("aGroup")).build(),
                 AccessEvaluation.ALL_PERMISSIONS,
                 List.of("write", "read")))
         .isTrue();

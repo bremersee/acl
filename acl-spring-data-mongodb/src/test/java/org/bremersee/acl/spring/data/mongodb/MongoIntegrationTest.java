@@ -26,7 +26,7 @@ import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.acl.AccessEvaluation;
 import org.bremersee.acl.Acl;
 import org.bremersee.acl.PermissionConstants;
-import org.bremersee.acl.UserContext;
+import org.bremersee.acl.AclUserContext;
 import org.bremersee.acl.model.AccessControlEntryModifications;
 import org.bremersee.acl.model.AccessControlListModifications;
 import org.bremersee.acl.spring.data.mongodb.app.ExampleConfiguration;
@@ -142,7 +142,7 @@ public class MongoIntegrationTest {
 
     Optional<ExampleEntity> actual = repository.findByOtherContent(
         content,
-        UserContext.builder()
+        AclUserContext.builder()
             .name("anna")
             .roles(List.of("ROLE_USER"))
             .build(),
@@ -154,7 +154,7 @@ public class MongoIntegrationTest {
 
     actual = repository.findByOtherContent(
         content,
-        UserContext.builder()
+        AclUserContext.builder()
             .name("max")
             .roles(List.of("ROLE_GUEST"))
             .build(),
@@ -166,7 +166,7 @@ public class MongoIntegrationTest {
 
     actual = repository.findByOtherContent(
         content,
-        UserContext.builder()
+        AclUserContext.builder()
             .name("james")
             .roles(List.of("ROLE_USER"))
             .build(),
@@ -179,7 +179,7 @@ public class MongoIntegrationTest {
 
     actual = repository.findByOtherContent(
         content,
-        UserContext.builder()
+        AclUserContext.builder()
             .name("james")
             .roles(List.of("ROLE_USER"))
             .build(),
@@ -191,7 +191,7 @@ public class MongoIntegrationTest {
 
     actual = repository.findByOtherContent(
         content,
-        UserContext.builder()
+        AclUserContext.builder()
             .name("")
             .groups(List.of("cron"))
             .build(),
@@ -203,7 +203,7 @@ public class MongoIntegrationTest {
 
     actual = repository.findByOtherContent(
         content,
-        UserContext.builder()
+        AclUserContext.builder()
             .name("junit")
             .build(),
         AccessEvaluation.ALL_PERMISSIONS,
@@ -266,7 +266,7 @@ public class MongoIntegrationTest {
         .assertThat(acl
             .modify(
                 modifications,
-                UserContext.builder()
+                AclUserContext.builder()
                     .name("anna")
                     .build(),
                 AccessEvaluation.ANY_PERMISSION,
@@ -280,7 +280,7 @@ public class MongoIntegrationTest {
 
     Optional<ExampleEntity> actual = repository.modifyAclByOtherContent(
         content,
-        UserContext.builder()
+        AclUserContext.builder()
             .name("anna")
             .build(),
         modifications);
@@ -361,7 +361,7 @@ public class MongoIntegrationTest {
 
     Optional<ExampleEntity> actual = repository.changeOwnerByOtherContent(
         content,
-        UserContext.builder()
+        AclUserContext.builder()
             .name("junit")
             .build(), "java");
     softly.assertThat(actual)
@@ -369,7 +369,7 @@ public class MongoIntegrationTest {
 
     actual = repository.changeOwnerByOtherContent(
         content,
-        UserContext.builder()
+        AclUserContext.builder()
             .name("someone")
             .build(), "swift");
     softly.assertThat(actual)

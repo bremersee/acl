@@ -18,7 +18,7 @@ package org.bremersee.acl;
 
 import static java.util.Collections.unmodifiableSortedMap;
 import static java.util.Objects.nonNull;
-import static org.bremersee.acl.UserContext.ANONYMOUS;
+import static org.bremersee.acl.AclUserContext.ANONYMOUS;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -108,7 +108,7 @@ public interface Acl {
    */
   default Optional<Acl> modify(
       @NotNull AccessControlListModifications mods,
-      @NotNull UserContext userContext,
+      @NotNull AclUserContext userContext,
       @NotNull AccessEvaluation accessEvaluation,
       @NotNull Collection<String> permissions) {
 

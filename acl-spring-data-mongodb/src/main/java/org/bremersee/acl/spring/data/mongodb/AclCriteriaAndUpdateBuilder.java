@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import org.bremersee.acl.AccessEvaluation;
 import org.bremersee.acl.Ace;
 import org.bremersee.acl.Acl;
-import org.bremersee.acl.UserContext;
+import org.bremersee.acl.AclUserContext;
 import org.bremersee.acl.annotation.AclHolder;
 import org.bremersee.acl.model.AccessControlEntryModifications;
 import org.bremersee.acl.model.AccessControlListModifications;
@@ -165,7 +165,7 @@ public class AclCriteriaAndUpdateBuilder {
    * @param userContext the user context
    * @return the criteria
    */
-  public Criteria buildUpdateOwnerCriteria(UserContext userContext) {
+  public Criteria buildUpdateOwnerCriteria(AclUserContext userContext) {
     Assert.notNull(userContext, "User context must be present.");
     return Criteria.where(path(Acl.OWNER)).is(userContext.getName());
   }
@@ -179,7 +179,7 @@ public class AclCriteriaAndUpdateBuilder {
    * @return the criteria
    */
   public Criteria buildPermissionCriteria(
-      UserContext userContext,
+      AclUserContext userContext,
       AccessEvaluation accessEvaluation,
       Collection<String> permissions) {
 
@@ -201,7 +201,7 @@ public class AclCriteriaAndUpdateBuilder {
   }
 
   private Criteria createAccessCriteria(
-      UserContext userContext,
+      AclUserContext userContext,
       String permission) {
 
     List<Criteria> criteriaList = new ArrayList<>();

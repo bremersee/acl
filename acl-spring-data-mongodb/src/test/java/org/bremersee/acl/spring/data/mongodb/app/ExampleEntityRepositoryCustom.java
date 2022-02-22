@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Optional;
 import org.bremersee.acl.AccessEvaluation;
 import org.bremersee.acl.Acl;
-import org.bremersee.acl.UserContext;
+import org.bremersee.acl.AclUserContext;
 import org.bremersee.acl.model.AccessControlListModifications;
 
 /**
@@ -41,7 +41,7 @@ public interface ExampleEntityRepositoryCustom {
    */
   Optional<ExampleEntity> findByOtherContent(
       String otherContent,
-      UserContext userContext,
+      AclUserContext userContext,
       AccessEvaluation accessEvaluation,
       Collection<String> permissions);
 
@@ -55,7 +55,7 @@ public interface ExampleEntityRepositoryCustom {
    */
   Optional<ExampleEntity> modifyAclByOtherContent(
       String otherContent,
-      UserContext userContext,
+      AclUserContext userContext,
       AccessControlListModifications modifications);
 
   /**
@@ -77,7 +77,7 @@ public interface ExampleEntityRepositoryCustom {
    */
   Optional<ExampleEntity> changeOwnerByOtherContent(
       String otherContent,
-      UserContext userContext,
+      AclUserContext userContext,
       String newOwner);
 
 }
