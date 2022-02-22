@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.acl.boot.data.mongodb;
+package org.bremersee.acl.spring.boot.data.mongodb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-package org.bremersee.acl.boot;
+package org.bremersee.acl.spring.boot;
