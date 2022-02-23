@@ -22,6 +22,7 @@
   <url>https://github.com/bremersee/acl</url>
 
   <modules>
+    <module>acl-model</module>
     <module>acl</module>
     <module>acl-spring-data-mongodb</module>
     <module>acl-spring-boot-autoconfigure</module>
@@ -33,6 +34,7 @@
     <gh-pages-staging-dir>${maven.multiModuleProjectDirectory}/target/staging</gh-pages-staging-dir>
 
     <common-autoconfigure.version>0.0.1-SNAPSHOT</common-autoconfigure.version>
+    <google-findbugs.version>3.0.2</google-findbugs.version>
   </properties>
 
   <developers>
@@ -91,6 +93,11 @@
         <groupId>org.bremersee</groupId>
         <artifactId>common-spring-boot-autoconfigure</artifactId>
         <version>${common-autoconfigure.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>${google-findbugs.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

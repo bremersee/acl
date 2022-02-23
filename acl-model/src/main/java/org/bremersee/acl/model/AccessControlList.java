@@ -16,8 +16,6 @@
 
 package org.bremersee.acl.model;
 
-import static org.bremersee.acl.AclUserContext.ANONYMOUS;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
@@ -55,7 +53,7 @@ public interface AccessControlList {
   @Value.Default
   @NotNull
   default String getOwner() {
-    return ANONYMOUS;
+    return "";
   }
 
   /**
