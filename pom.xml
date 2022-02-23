@@ -24,7 +24,7 @@
   <modules>
     <module>acl-model</module>
     <module>acl</module>
-    <module>acl-spring-data-mongo</module>
+    <module>acl-spring-data-mongodb</module>
     <module>acl-spring-boot-autoconfigure</module>
   </modules>
 

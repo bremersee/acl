@@ -19,7 +19,7 @@ package org.bremersee.acl.spring.boot.autoconfigure.data.mongo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import org.bremersee.acl.spring.data.mongo.convert.AclConverters;
+import org.bremersee.acl.spring.data.mongodb.convert.AclConverters;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.convert.converter.Converter;
 
