@@ -20,15 +20,12 @@ import static java.util.Objects.isNull;
 import static org.bremersee.acl.AclUserContext.ANONYMOUS;
 
 import java.util.Collection;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 /**
  * The access evaluator.
  *
  * @author Christian Bremer
  */
-@Valid
 public interface AccessEvaluator {
 
   /**
@@ -50,7 +47,7 @@ public interface AccessEvaluator {
    * @return {@code true} if the user has the permission, otherwise {@code false}
    */
   boolean hasPermission(
-      @NotNull AclUserContext userContext,
+      AclUserContext userContext,
       String permission);
 
   /**
@@ -63,9 +60,9 @@ public interface AccessEvaluator {
    * @return {@code true} if the user has the permissions, otherwise {@code false}
    */
   default boolean hasPermissions(
-      @NotNull AclUserContext userContext,
-      @NotNull AccessEvaluation accessEvaluation,
-      @NotNull Collection<String> permissions) {
+      AclUserContext userContext,
+      AccessEvaluation accessEvaluation,
+      Collection<String> permissions) {
 
     if (accessEvaluation.isAnyPermission()) {
       return permissions.stream()

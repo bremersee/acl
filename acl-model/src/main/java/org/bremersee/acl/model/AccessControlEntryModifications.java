@@ -22,9 +22,8 @@ import static org.bremersee.acl.model.AccessControlEntry.PERMISSION;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import java.util.Set;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
 
 /**
@@ -33,7 +32,6 @@ import org.immutables.value.Value;
  * @author Christian Bremer
  */
 @Value.Immutable
-@Valid
 @Schema(description = "Specifies modifications of an access control entry.")
 @JsonDeserialize(builder = ImmutableAccessControlEntryModifications.Builder.class)
 public interface AccessControlEntryModifications extends
@@ -54,7 +52,7 @@ public interface AccessControlEntryModifications extends
    * @param ace the access control entry
    * @return the access control entry modifications builder
    */
-  static ImmutableAccessControlEntryModifications.Builder from(@NotNull AccessControlEntry ace) {
+  static ImmutableAccessControlEntryModifications.Builder from(AccessControlEntry ace) {
     return builder()
         .permission(ace.getPermission())
         .isGuest(ace.isGuest());
@@ -67,10 +65,9 @@ public interface AccessControlEntryModifications extends
    */
   @Schema(
       description = "Specifies the permission.",
-      required = true,
+      requiredMode = RequiredMode.REQUIRED,
       example = "read")
   @JsonProperty(value = PERMISSION, required = true)
-  @NotNull
   String getPermission();
 
   /**

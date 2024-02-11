@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -35,7 +33,6 @@ import lombok.ToString;
  *
  * @author Christian Bremer
  */
-@Valid
 public interface Ace {
 
   /**
@@ -63,7 +60,6 @@ public interface Ace {
    *
    * @return the ace builder
    */
-  @NotNull
   static AceBuilder builder() {
     return new AceBuilder();
   }
@@ -73,7 +69,6 @@ public interface Ace {
    *
    * @return the ace
    */
-  @NotNull
   static Ace empty() {
     return builder().build();
   }
@@ -90,7 +85,6 @@ public interface Ace {
    *
    * @return the users
    */
-  @NotNull
   SortedSet<String> getUsers();
 
   /**
@@ -98,7 +92,6 @@ public interface Ace {
    *
    * @return the roles
    */
-  @NotNull
   SortedSet<String> getRoles();
 
   /**
@@ -106,7 +99,6 @@ public interface Ace {
    *
    * @return the groups
    */
-  @NotNull
   SortedSet<String> getGroups();
 
   /**
@@ -114,7 +106,6 @@ public interface Ace {
    *
    * @author Christian Bremer
    */
-  @SuppressWarnings("SameNameButDifferent")
   @ToString
   @EqualsAndHashCode
   class AceBuilder {

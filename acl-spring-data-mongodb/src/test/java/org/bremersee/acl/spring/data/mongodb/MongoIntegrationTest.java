@@ -21,12 +21,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.acl.AccessEvaluation;
 import org.bremersee.acl.Acl;
-import org.bremersee.acl.PermissionConstants;
 import org.bremersee.acl.AclUserContext;
+import org.bremersee.acl.PermissionConstants;
 import org.bremersee.acl.model.AccessControlEntryModifications;
 import org.bremersee.acl.model.AccessControlListModifications;
 import org.bremersee.acl.spring.data.mongodb.app.ExampleConfiguration;
@@ -40,26 +41,32 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.IndexInfo;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 /**
  * The acl criteria and update builder integration test.
  *
  * @author Christian Bremer
  */
+@Testcontainers
 @SpringBootTest(
     classes = {ExampleConfiguration.class},
-    webEnvironment = WebEnvironment.NONE,
-    properties = {
-        "security.basic.enabled=false",
-        "spring.data.mongodb.uri=mongodb://localhost:27017/test",
-        "spring.data.mongodb.auto-index-creation=false",
-        "spring.mongodb.embedded.version=3.6.2"
-    })
+    webEnvironment = WebEnvironment.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(SoftAssertionsExtension.class)
+@Slf4j
 public class MongoIntegrationTest {
+
+  @Container
+  @ServiceConnection
+  static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName
+      .parse("mongo:4.0.10"));
 
   /**
    * The Mongo template.

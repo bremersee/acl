@@ -30,8 +30,6 @@ import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -42,7 +40,6 @@ import org.bremersee.acl.model.AccessControlListModifications;
  *
  * @author Christian Bremer
  */
-@Valid
 public interface Acl {
 
   /**
@@ -84,7 +81,6 @@ public interface Acl {
    *
    * @return the owner
    */
-  @NotNull
   String getOwner();
 
   /**
@@ -93,7 +89,6 @@ public interface Acl {
    *
    * @return the map
    */
-  @NotNull
   SortedMap<String, Ace> getPermissionMap();
 
   /**
@@ -107,10 +102,10 @@ public interface Acl {
    * @return the optional
    */
   default Optional<Acl> modify(
-      @NotNull AccessControlListModifications mods,
-      @NotNull AclUserContext userContext,
-      @NotNull AccessEvaluation accessEvaluation,
-      @NotNull Collection<String> permissions) {
+      AccessControlListModifications mods,
+      AclUserContext userContext,
+      AccessEvaluation accessEvaluation,
+      Collection<String> permissions) {
 
     boolean hasPermission = AccessEvaluator.of(this)
         .hasPermissions(userContext, accessEvaluation, permissions);
@@ -124,7 +119,6 @@ public interface Acl {
    *
    * @author Christian Bremer
    */
-  @SuppressWarnings("SameNameButDifferent")
   @ToString
   @EqualsAndHashCode
   class AclBuilder {

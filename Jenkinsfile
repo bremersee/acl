@@ -3,13 +3,15 @@ pipeline {
     label 'maven'
   }
   environment {
-    DEPLOY = false
-    SNAPSHOT_SITE = false
+    CODECOV_TOKEN = credentials('acl-codecov-token')
+    TEST = true
+    DEPLOY = true
+    SNAPSHOT_SITE = true
     RELEASE_SITE = true
     DEPLOY_FEATURE = false
   }
   tools {
-    jdk 'jdk11'
+    jdk 'jdk17'
     maven 'm3'
   }
   options {
@@ -24,9 +26,7 @@ pipeline {
     }
     stage('Test') {
       when {
-        not {
-          branch 'feature/*'
-        }
+        environment name: 'TEST', value: 'true'
       }
       steps {
         sh 'mvn -B clean test'
@@ -51,18 +51,26 @@ pipeline {
         }
       }
       steps {
-        sh 'mvn -B -P deploy clean deploy'
+        sh 'mvn -B -P deploy deploy'
       }
     }
     stage('Snapshot Site') {
       when {
         allOf {
-          branch 'develop'
           environment name: 'SNAPSHOT_SITE', value: 'true'
+          anyOf {
+            branch 'develop'
+            branch 'feature/*'
+          }
         }
       }
       steps {
         sh 'mvn -B clean site-deploy'
+      }
+      post {
+        always {
+          sh 'curl -s https://codecov.io/bash | bash -s - -t ${CODECOV_TOKEN}'
+        }
       }
     }
     stage('Release Site') {
@@ -73,7 +81,12 @@ pipeline {
         }
       }
       steps {
-        sh 'mvn -B -P gh-pages-site clean site site:stage scm-publish:publish-scm'
+        sh 'mvn -B -P gh-pages-site site site:stage scm-publish:publish-scm'
+      }
+      post {
+        always {
+          sh 'curl -s https://codecov.io/bash | bash -s - -t ${CODECOV_TOKEN}'
+        }
       }
     }
     stage('Deploy Feature') {

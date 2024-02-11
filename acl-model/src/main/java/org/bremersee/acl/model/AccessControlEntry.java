@@ -19,11 +19,9 @@ package org.bremersee.acl.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import java.util.Collection;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
 
 /**
@@ -32,7 +30,6 @@ import org.immutables.value.Value;
  * @author Christian Bremer
  */
 @Value.Immutable
-@Valid
 @Schema(description = "Specifies a permission and who is granted.")
 @JsonDeserialize(builder = ImmutableAccessControlEntry.Builder.class)
 public interface AccessControlEntry extends Comparable<AccessControlEntry> {
@@ -78,10 +75,9 @@ public interface AccessControlEntry extends Comparable<AccessControlEntry> {
    */
   @Schema(
       description = "Specifies the permission.",
-      required = true,
+      requiredMode = RequiredMode.REQUIRED,
       example = "read")
   @JsonProperty(value = PERMISSION, required = true)
-  @NotNull
   String getPermission();
 
   /**
@@ -133,7 +129,7 @@ public interface AccessControlEntry extends Comparable<AccessControlEntry> {
   }
 
   @Override
-  default int compareTo(@Nonnull AccessControlEntry o) {
+  default int compareTo(AccessControlEntry o) {
     return getPermission().compareToIgnoreCase(o.getPermission());
   }
 

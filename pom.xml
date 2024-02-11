@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.bremersee</groupId>
     <artifactId>common-parent</artifactId>
-    <version>2.4.0</version>
+    <version>3.0.0-SNAPSHOT</version>
     <relativePath/>
   </parent>
 
@@ -33,8 +33,7 @@
     <!--suppress UnresolvedMavenProperty -->
     <gh-pages-staging-dir>${maven.multiModuleProjectDirectory}/target/staging</gh-pages-staging-dir>
 
-    <extended-spring.version>0.0.1-SNAPSHOT</extended-spring.version>
-    <google-findbugs.version>3.0.2</google-findbugs.version>
+    <spring-extensions.version>0.0.1-SNAPSHOT</spring-extensions.version>
   </properties>
 
   <developers>
@@ -91,13 +90,8 @@
     <dependencies>
       <dependency>
         <groupId>org.bremersee</groupId>
-        <artifactId>extended-spring-boot-autoconfigure</artifactId>
-        <version>${extended-spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.code.findbugs</groupId>
-        <artifactId>jsr305</artifactId>
-        <version>${google-findbugs.version}</version>
+        <artifactId>spring-extensions-boot-autoconfigure</artifactId>
+        <version>${spring-extensions.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

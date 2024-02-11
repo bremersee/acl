@@ -20,8 +20,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
 
 /**
@@ -30,7 +28,6 @@ import org.immutables.value.Value;
  * @author Christian Bremer
  */
 @Value.Immutable
-@Valid
 @Schema(description = "Specifies permissions and who is granted.")
 @JsonDeserialize(builder = ImmutableAccessControlList.Builder.class)
 public interface AccessControlList {
@@ -51,7 +48,6 @@ public interface AccessControlList {
    */
   @Schema(description = "The owner is always granted and can only be changed by the owner.")
   @Value.Default
-  @NotNull
   default String getOwner() {
     return "";
   }

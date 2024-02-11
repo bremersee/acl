@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.validation.Valid;
 import org.immutables.value.Value;
 
 /**
@@ -32,7 +31,6 @@ import org.immutables.value.Value;
  * @author Christian Bremer
  */
 @Value.Immutable
-@Valid
 @Schema(description = "Specifies modifications of an access control list.")
 @JsonDeserialize(builder = ImmutableAccessControlListModifications.Builder.class)
 public interface AccessControlListModifications {

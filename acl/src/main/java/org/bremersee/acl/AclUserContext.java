@@ -18,8 +18,6 @@ package org.bremersee.acl;
 
 import java.util.Collection;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.immutables.value.Value;
 
 /**
@@ -28,7 +26,6 @@ import org.immutables.value.Value;
  * @author Christian Bremer
  */
 @Value.Immutable
-@Valid
 public interface AclUserContext {
 
   /**
@@ -51,7 +48,6 @@ public interface AclUserContext {
    * @return the name
    */
   @Value.Default
-  @NotNull
   default String getName() {
     return ANONYMOUS;
   }
@@ -62,7 +58,6 @@ public interface AclUserContext {
    * @return the roles
    */
   @Value.Default
-  @NotNull
   default Collection<String> getRoles() {
     return List.of();
   }
@@ -73,7 +68,6 @@ public interface AclUserContext {
    * @return the groups
    */
   @Value.Default
-  @NotNull
   default Collection<String> getGroups() {
     return List.of();
   }
