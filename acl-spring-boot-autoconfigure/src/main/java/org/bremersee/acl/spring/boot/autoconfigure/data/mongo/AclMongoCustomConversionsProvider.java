@@ -32,7 +32,7 @@ import org.springframework.util.ClassUtils;
  *
  * @author Christian Bremer
  */
-@ConditionalOnClass({AclConverters.class})
+@ConditionalOnClass(name = {"org.bremersee.acl.spring.data.mongodb.convert.AclConverters"})
 @Configuration
 @Slf4j
 public class AclMongoCustomConversionsProvider implements MongoCustomConversionsProvider {
@@ -42,10 +42,11 @@ public class AclMongoCustomConversionsProvider implements MongoCustomConversions
    */
   @EventListener(ApplicationReadyEvent.class)
   public void init() {
-    log.info("\n"
-            + "*********************************************************************************\n"
-            + "* {}\n"
-            + "*********************************************************************************",
+    log.info("""
+
+            *********************************************************************************
+            * {}
+            *********************************************************************************""",
         ClassUtils.getUserClass(getClass()).getSimpleName());
   }
 

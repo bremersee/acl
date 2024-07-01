@@ -216,14 +216,14 @@ public class AclCriteriaAndUpdateBuilder {
         .map(role -> Criteria.
             where(path(Acl.ENTRIES, permission, Ace.ROLES))
             .all(role))
-        .collect(Collectors.toList())
+        .toList()
     );
     criteriaList.addAll(userContext.getGroups().stream()
         .filter(group -> !isEmpty(group))
         .map(group -> Criteria
             .where(path(Acl.ENTRIES, permission, Ace.GROUPS))
             .all(group))
-        .collect(Collectors.toList())
+        .toList()
     );
     return new Criteria().orOperator(criteriaList);
   }
