@@ -17,6 +17,7 @@
 package org.bremersee.acl.spring.data.mongodb.convert;
 
 import java.util.List;
+import java.util.Objects;
 import org.bremersee.acl.Ace;
 import org.bson.Document;
 import org.springframework.core.convert.converter.Converter;
@@ -39,5 +40,18 @@ public class DocumentToAceConverter implements Converter<Document, Ace> {
         .roles(source.getList(Ace.ROLES, String.class, List.of()))
         .groups(source.getList(Ace.GROUPS, String.class, List.of()))
         .build();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    return o != null && getClass() == o.getClass();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(getClass());
   }
 }

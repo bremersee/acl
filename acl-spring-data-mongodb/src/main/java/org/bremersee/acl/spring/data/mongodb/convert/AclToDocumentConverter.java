@@ -21,6 +21,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.bremersee.acl.Acl;
 import org.bson.Document;
@@ -53,5 +54,18 @@ public class AclToDocumentConverter implements Converter<Acl, Document> {
       target.put(Acl.ENTRIES, entries);
     }
     return target;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    return o != null && getClass() == o.getClass();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(getClass());
   }
 }

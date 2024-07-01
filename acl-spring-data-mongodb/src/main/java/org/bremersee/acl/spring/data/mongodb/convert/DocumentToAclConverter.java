@@ -18,6 +18,7 @@ package org.bremersee.acl.spring.data.mongodb.convert;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import org.bremersee.acl.Ace;
 import org.bremersee.acl.Acl;
 import org.bson.Document;
@@ -60,6 +61,19 @@ public class DocumentToAclConverter implements Converter<Document, Acl> {
         .owner(owner)
         .permissionMap(permissionMap)
         .build();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    return o != null && getClass() == o.getClass();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(getClass());
   }
 
 }
