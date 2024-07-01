@@ -19,7 +19,7 @@ package org.bremersee.acl.spring.boot.autoconfigure.data.mongo;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.acl.spring.data.mongodb.convert.AclConverters;
-import org.bremersee.spring.boot.autoconfigure.data.mongo.MongoCustomConversionsProvider;
+import org.bremersee.spring.data.mongodb.core.convert.MongoCustomConversionsProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
