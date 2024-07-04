@@ -44,7 +44,7 @@ public class ExampleConfiguration {
   @Primary
   @Bean
   public MongoCustomConversions customConversions() {
-    return new MongoCustomConversions(AclConverters.getConvertersToRegister());
+    return new MongoCustomConversions(new AclConverters().getCustomConversions());
   }
 
 }

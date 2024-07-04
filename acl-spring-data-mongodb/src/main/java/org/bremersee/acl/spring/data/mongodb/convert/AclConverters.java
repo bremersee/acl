@@ -17,6 +17,7 @@
 package org.bremersee.acl.spring.data.mongodb.convert;
 
 import java.util.List;
+import org.bremersee.spring.data.mongodb.core.convert.MongoCustomConversionsProvider;
 import org.springframework.core.convert.converter.Converter;
 
 /**
@@ -24,17 +25,15 @@ import org.springframework.core.convert.converter.Converter;
  *
  * @author Christian Bremer
  */
-public abstract class AclConverters {
-
-  private AclConverters() {
-  }
+public class AclConverters implements MongoCustomConversionsProvider {
 
   /**
    * Gets converters to register.
    *
    * @return the converters to register
    */
-  public static List<Converter<?, ?>> getConvertersToRegister() {
+  @Override
+  public List<Converter<?, ?>> getCustomConversions() {
     return List.of(
         new AceToDocumentConverter(),
         new AclToDocumentConverter(),
