@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DocumentToAclConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Acl for Spring Data MongoDB</a> &gt; <a href="index.source.html" class="el_package">org.bremersee.acl.spring.data.mongodb.convert</a> &gt; <span class="el_source">DocumentToAclConverter.java</span></div><h1>DocumentToAclConverter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.bremersee.acl.spring.data.mongodb.convert;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import org.bremersee.acl.Ace;
+import org.bremersee.acl.Acl;
+import org.bson.Document;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.convert.ReadingConverter;
+import org.springframework.lang.NonNull;
+
+/**
+ * The document to acl converter.
+ *
+ * @author Christian Bremer
+ */
+@ReadingConverter
+<span class="fc" id="L35">public class DocumentToAclConverter implements Converter&lt;Document, Acl&gt; {</span>
+
+<span class="fc" id="L37">  private final DocumentToAceConverter aceConverter = new DocumentToAceConverter();</span>
+
+  @Override
+  public Acl convert(@NonNull Document source) {
+<span class="fc" id="L41">    String owner = source.getString(Acl.OWNER);</span>
+<span class="fc" id="L42">    Object entries = source.get(Acl.ENTRIES);</span>
+<span class="fc" id="L43">    Map&lt;String, Ace&gt; permissionMap = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">    if (entries instanceof Map) {</span>
+      //noinspection unchecked
+<span class="fc" id="L46">      Map&lt;String, Object&gt; entryMap = (Map&lt;String, Object&gt;) entries;</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">      for (Map.Entry&lt;String, Object&gt; entry : entryMap.entrySet()) {</span>
+<span class="fc" id="L48">        String permission = entry.getKey();</span>
+<span class="fc" id="L49">        Object aceObj = entry.getValue();</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (aceObj instanceof Ace) {</span>
+<span class="nc" id="L51">          permissionMap.put(permission, (Ace) aceObj);</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        } else if (aceObj instanceof Map) {</span>
+          //noinspection unchecked
+<span class="fc" id="L54">          Map&lt;String, Object&gt; aceMap = (Map&lt;String, Object&gt;) aceObj;</span>
+<span class="fc" id="L55">          Ace ace = aceConverter.convert(new Document(aceMap));</span>
+<span class="fc" id="L56">          permissionMap.put(permission, ace);</span>
+        }
+<span class="fc" id="L58">      }</span>
+    }
+<span class="fc" id="L60">    return Acl.builder()</span>
+<span class="fc" id="L61">        .owner(owner)</span>
+<span class="fc" id="L62">        .permissionMap(permissionMap)</span>
+<span class="fc" id="L63">        .build();</span>
+  }
+
+  @Override
+  public boolean equals(Object o) {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">    if (this == o) {</span>
+<span class="nc" id="L69">      return true;</span>
+    }
+<span class="nc bnc" id="L71" title="All 4 branches missed.">    return o != null &amp;&amp; getClass() == o.getClass();</span>
+  }
+
+  @Override
+  public int hashCode() {
+<span class="fc" id="L76">    return Objects.hashCode(getClass());</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

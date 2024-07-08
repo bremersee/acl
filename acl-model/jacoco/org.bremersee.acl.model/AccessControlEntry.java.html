@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccessControlEntry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Acl Model</a> &gt; <a href="index.source.html" class="el_package">org.bremersee.acl.model</a> &gt; <span class="el_source">AccessControlEntry.java</span></div><h1>AccessControlEntry.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.bremersee.acl.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
+import java.util.Collection;
+import java.util.List;
+import org.immutables.value.Value;
+
+/**
+ * Specifies a permission and who is granted.
+ *
+ * @author Christian Bremer
+ */
+@Value.Immutable
+@Schema(description = &quot;Specifies a permission and who is granted.&quot;)
+@JsonDeserialize(builder = ImmutableAccessControlEntry.Builder.class)
+public interface AccessControlEntry extends Comparable&lt;AccessControlEntry&gt; {
+
+  /**
+   * The constant PERMISSION.
+   */
+  String PERMISSION = &quot;permission&quot;;
+
+  /**
+   * The constant GUEST.
+   */
+  String GUEST = &quot;guest&quot;;
+
+  /**
+   * The constant USERS.
+   */
+  String USERS = &quot;users&quot;;
+
+  /**
+   * The constant ROLES.
+   */
+  String ROLES = &quot;roles&quot;;
+
+  /**
+   * The constant GROUPS.
+   */
+  String GROUPS = &quot;groups&quot;;
+
+  /**
+   * Creates new builder.
+   *
+   * @return the access control entry builder
+   */
+  static ImmutableAccessControlEntry.Builder builder() {
+<span class="fc" id="L68">    return ImmutableAccessControlEntry.builder();</span>
+  }
+
+  /**
+   * Specifies the permission.
+   *
+   * @return the permission
+   */
+  @Schema(
+      description = &quot;Specifies the permission.&quot;,
+      requiredMode = RequiredMode.REQUIRED,
+      example = &quot;read&quot;)
+  @JsonProperty(value = PERMISSION, required = true)
+  String getPermission();
+
+  /**
+   * Specifies whether anybody is granted or not.
+   *
+   * @return whether anybody is granted (true) or not (false)
+   */
+  @Schema(description = &quot;Specifies whether anybody is granted.&quot;, defaultValue = &quot;false&quot;)
+  @JsonProperty(value = GUEST, defaultValue = &quot;false&quot;)
+  @Value.Default
+  default boolean isGuest() {
+<span class="fc" id="L92">    return false;</span>
+  }
+
+  /**
+   * Specifies the granted users.
+   *
+   * @return the users
+   */
+  @Schema(description = &quot;Specifies the granted users.&quot;)
+  @JsonProperty(USERS)
+  @Value.Default
+  default Collection&lt;String&gt; getUsers() {
+<span class="fc" id="L104">    return List.of();</span>
+  }
+
+  /**
+   * Specifies the granted roles.
+   *
+   * @return the roles
+   */
+  @Schema(description = &quot;Specifies the granted roles.&quot;)
+  @JsonProperty(ROLES)
+  @Value.Default
+  default Collection&lt;String&gt; getRoles() {
+<span class="fc" id="L116">    return List.of();</span>
+  }
+
+  /**
+   * Specifies the granted groups.
+   *
+   * @return the groups
+   */
+  @Schema(description = &quot;Specifies the granted groups.&quot;)
+  @JsonProperty(GROUPS)
+  @Value.Default
+  default Collection&lt;String&gt; getGroups() {
+<span class="fc" id="L128">    return List.of();</span>
+  }
+
+  @Override
+  default int compareTo(AccessControlEntry o) {
+<span class="fc" id="L133">    return getPermission().compareToIgnoreCase(o.getPermission());</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AclIndexOperations.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Acl for Spring Data MongoDB</a> &gt; <a href="index.source.html" class="el_package">org.bremersee.acl.spring.data.mongodb</a> &gt; <span class="el_source">AclIndexOperations.java</span></div><h1>AclIndexOperations.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.bremersee.acl.spring.data.mongodb;
+
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import org.bremersee.acl.Ace;
+import org.bremersee.acl.Acl;
+import org.bremersee.acl.annotation.AclHolder;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.index.Index;
+import org.springframework.data.mongodb.core.index.IndexInfo;
+import org.springframework.data.mongodb.core.index.IndexOperations;
+import org.springframework.util.Assert;
+
+/**
+ * The acl index operations.
+ *
+ * @author Christian Bremer
+ */
+public class AclIndexOperations {
+
+  private final MongoOperations mongoOperations;
+
+  /**
+   * Instantiates a new acl index operations.
+   *
+   * @param mongoOperations the mongo operations
+   */
+<span class="fc" id="L53">  public AclIndexOperations(MongoOperations mongoOperations) {</span>
+<span class="fc" id="L54">    Assert.notNull(mongoOperations, &quot;Mongo operations must be present.&quot;);</span>
+<span class="fc" id="L55">    this.mongoOperations = mongoOperations;</span>
+<span class="fc" id="L56">  }</span>
+
+  /**
+   * Gets acl index info.
+   *
+   * @param entityClass the entity class
+   * @return the acl index info
+   */
+  public List&lt;IndexInfo&gt; getAclIndexInfo(Class&lt;?&gt; entityClass) {
+<span class="fc" id="L65">    Assert.notNull(entityClass, &quot;Entity class must be present.&quot;);</span>
+<span class="fc" id="L66">    String aclPath = getAclPath(entityClass);</span>
+<span class="fc" id="L67">    return getAclIndexInfo(entityClass, aclPath);</span>
+  }
+
+  /**
+   * Gets acl index info.
+   *
+   * @param entityClass the entity class
+   * @param aclPath the acl path
+   * @return the acl index info
+   */
+  public List&lt;IndexInfo&gt; getAclIndexInfo(Class&lt;?&gt; entityClass, String aclPath) {
+<span class="fc" id="L78">    Assert.notNull(entityClass, &quot;Entity class must be present.&quot;);</span>
+<span class="fc" id="L79">    return getAclIndexInfo(mongoOperations.indexOps(entityClass), aclPath);</span>
+  }
+
+  /**
+   * Gets acl index info.
+   *
+   * @param collectionName the collection name
+   * @param aclPath the acl path
+   * @return the acl index info
+   */
+  public List&lt;IndexInfo&gt; getAclIndexInfo(String collectionName, String aclPath) {
+<span class="fc" id="L90">    Assert.hasLength(collectionName, &quot;Collection name must be present.&quot;);</span>
+<span class="fc" id="L91">    return getAclIndexInfo(mongoOperations.indexOps(collectionName), aclPath);</span>
+  }
+
+  private List&lt;IndexInfo&gt; getAclIndexInfo(IndexOperations indexOps, String aclPath) {
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">    String validAclPath = isEmpty(aclPath) ? &quot;&quot; : aclPath.trim() + &quot;.&quot;;</span>
+    // Example: acl.(owner|(entries.(\.*).(guest|users|roles|groups)))(.*)
+<span class="fc" id="L97">    String regex = String.format(</span>
+        &quot;%s(%s|(%s.(.*).(%s|%s|%s|%s)))(.*)&quot;,
+        validAclPath, Acl.OWNER, Acl.ENTRIES, Ace.GUEST, Ace.USERS, Ace.ROLES, Ace.GROUPS);
+<span class="fc" id="L100">    Pattern pattern = Pattern.compile(regex);</span>
+<span class="fc" id="L101">    return indexOps.getIndexInfo()</span>
+<span class="fc" id="L102">        .stream()</span>
+<span class="fc" id="L103">        .filter(indexInfo -&gt; pattern.matcher(indexInfo.getName()).matches())</span>
+<span class="fc" id="L104">        .collect(Collectors.toList());</span>
+  }
+
+  /**
+   * Ensure acl indexes.
+   *
+   * @param entityClass the entity class
+   * @param possiblePermissions the possible permissions
+   * @param dropIndexesOfOtherPermissions the drop indexes of other permissions
+   */
+  public void ensureAclIndexes(
+      Class&lt;?&gt; entityClass,
+      Collection&lt;String&gt; possiblePermissions,
+      boolean dropIndexesOfOtherPermissions) {
+
+<span class="fc" id="L119">    Assert.notNull(entityClass, &quot;Entity class must be present.&quot;);</span>
+<span class="fc" id="L120">    String aclPath = getAclPath(entityClass);</span>
+<span class="fc" id="L121">    ensureAclIndexes(entityClass, aclPath, possiblePermissions, dropIndexesOfOtherPermissions);</span>
+<span class="fc" id="L122">  }</span>
+
+  /**
+   * Ensure acl indexes.
+   *
+   * @param entityClass the entity class
+   * @param aclPath the acl path
+   * @param possiblePermissions the possible permissions
+   * @param dropIndexesOfOtherPermissions the drop indexes of other permissions
+   */
+  public void ensureAclIndexes(
+      Class&lt;?&gt; entityClass,
+      String aclPath,
+      Collection&lt;String&gt; possiblePermissions,
+      boolean dropIndexesOfOtherPermissions) {
+
+<span class="fc" id="L138">    Assert.notNull(entityClass, &quot;Entity class must be present.&quot;);</span>
+<span class="fc" id="L139">    ensureAclIndexes(</span>
+<span class="fc" id="L140">        mongoOperations.indexOps(entityClass),</span>
+        aclPath,
+        possiblePermissions,
+        dropIndexesOfOtherPermissions);
+<span class="fc" id="L144">  }</span>
+
+  /**
+   * Ensure acl indexes.
+   *
+   * @param collectionName the collection name
+   * @param aclPath the acl path
+   * @param possiblePermissions the possible permissions
+   * @param dropIndexesOfOtherPermissions the drop indexes of other permissions
+   */
+  public void ensureAclIndexes(
+      String collectionName,
+      String aclPath,
+      Collection&lt;String&gt; possiblePermissions,
+      boolean dropIndexesOfOtherPermissions) {
+
+<span class="fc" id="L160">    Assert.hasLength(collectionName, &quot;Collection name must be present.&quot;);</span>
+<span class="fc" id="L161">    ensureAclIndexes(</span>
+<span class="fc" id="L162">        mongoOperations.indexOps(collectionName.trim()),</span>
+        aclPath,
+        possiblePermissions,
+        dropIndexesOfOtherPermissions);
+<span class="fc" id="L166">  }</span>
+
+  private void ensureAclIndexes(
+      IndexOperations indexOps,
+      String aclPath,
+      Collection&lt;String&gt; possiblePermissions,
+      boolean dropIndexesOfOtherPermissions) {
+
+<span class="fc bfc" id="L174" title="All 2 branches covered.">    if (dropIndexesOfOtherPermissions) {</span>
+<span class="fc" id="L175">      dropUnusedAclIndexes(indexOps, aclPath, possiblePermissions);</span>
+    }
+
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">    String validAclPath = isEmpty(aclPath) ? &quot;&quot; : aclPath.trim();</span>
+<span class="fc" id="L179">    indexOps.ensureIndex(new Index()</span>
+<span class="fc" id="L180">        .on(path(validAclPath, Acl.OWNER), Direction.ASC));</span>
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">    if (!isEmpty(possiblePermissions)) {</span>
+<span class="fc" id="L182">      List.of(Ace.GUEST, Ace.USERS, Ace.ROLES, Ace.GROUPS)</span>
+<span class="fc" id="L183">          .forEach(field -&gt; Set.copyOf(possiblePermissions)</span>
+<span class="fc" id="L184">              .forEach(permission -&gt; indexOps</span>
+<span class="fc" id="L185">                  .ensureIndex(new Index()</span>
+<span class="fc" id="L186">                      .on(path(validAclPath, Acl.ENTRIES, permission, field),</span>
+                          Direction.ASC))));
+    }
+<span class="fc" id="L189">  }</span>
+
+  private void dropUnusedAclIndexes(
+      IndexOperations indexOps,
+      String aclPath,
+      Collection&lt;String&gt; possiblePermissions) {
+
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">    Set&lt;String&gt; newPermissions = isEmpty(possiblePermissions)</span>
+<span class="nc" id="L197">        ? Set.of()</span>
+<span class="fc" id="L198">        : Set.copyOf(possiblePermissions);</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">    String validAclPath = isEmpty(aclPath) ? &quot;&quot; : aclPath.trim() + &quot;.&quot;;</span>
+    // Example: acl.entries.(\.*).(guest|users|roles|groups)(.*)
+<span class="fc" id="L201">    String regex = String.format(</span>
+        &quot;%s%s.(.*).(%s|%s|%s|%s)(.*)&quot;,
+        validAclPath, Acl.ENTRIES, Ace.GUEST, Ace.USERS, Ace.ROLES, Ace.GROUPS);
+<span class="fc" id="L204">    Pattern pattern = Pattern.compile(regex);</span>
+<span class="fc" id="L205">    getAclIndexInfo(indexOps, aclPath)</span>
+<span class="fc" id="L206">        .stream()</span>
+<span class="fc" id="L207">        .filter(indexInfo -&gt; {</span>
+<span class="fc" id="L208">          Matcher matcher = pattern.matcher(indexInfo.getName());</span>
+<span class="fc bfc" id="L209" title="All 4 branches covered.">          return matcher.matches() &amp;&amp; !newPermissions.contains(matcher.group(1));</span>
+        })
+<span class="fc" id="L211">        .forEach(indexInfo -&gt; indexOps.dropIndex(indexInfo.getName()));</span>
+<span class="fc" id="L212">  }</span>
+
+  private String getAclPath(Class&lt;?&gt; entityClass) {
+<span class="fc" id="L215">    return Optional</span>
+<span class="fc" id="L216">        .ofNullable(findAnnotation(entityClass, AclHolder.class))</span>
+<span class="fc" id="L217">        .map(AclHolder::path)</span>
+<span class="pc" id="L218">        .orElseThrow(() -&gt; new IllegalArgumentException(String</span>
+<span class="nc" id="L219">            .format(</span>
+                &quot;Entity class %s must be annotated with %s.&quot;,
+<span class="nc" id="L221">                entityClass.getSimpleName(), AclHolder.class.getSimpleName())));</span>
+  }
+
+  private String path(String... pathSegments) {
+<span class="fc" id="L225">    String aclPath = String.join(&quot;.&quot;, pathSegments);</span>
+<span class="pc bpc" id="L226" title="1 of 2 branches missed.">    return aclPath.startsWith(&quot;.&quot;) ? aclPath.substring(1) : aclPath;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

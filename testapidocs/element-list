@@ -1,0 +1,6 @@
+org.bremersee.acl
+org.bremersee.acl.annotation
+org.bremersee.acl.mapper
+org.bremersee.acl.model
+org.bremersee.acl.spring.data.mongodb
+org.bremersee.acl.spring.data.mongodb.app

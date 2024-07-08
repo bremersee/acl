@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccessEvaluator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Acl</a> &gt; <a href="index.source.html" class="el_package">org.bremersee.acl</a> &gt; <span class="el_source">AccessEvaluator.java</span></div><h1>AccessEvaluator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.bremersee.acl;
+
+import static java.util.Objects.isNull;
+import static org.bremersee.acl.AclUserContext.ANONYMOUS;
+
+import java.util.Collection;
+
+/**
+ * The access evaluator.
+ *
+ * @author Christian Bremer
+ */
+public interface AccessEvaluator {
+
+  /**
+   * Creates an access evaluator from the given access control list.
+   *
+   * @param acl the access control list
+   * @return the access evaluator
+   */
+  static AccessEvaluator of(Acl acl) {
+<span class="fc" id="L38">    return new Impl(acl);</span>
+  }
+
+  /**
+   * Determines whether the given user with the given roles and groups has the specified
+   * permission.
+   *
+   * @param userContext the user context
+   * @param permission the permission
+   * @return {@code true} if the user has the permission, otherwise {@code false}
+   */
+  boolean hasPermission(
+      AclUserContext userContext,
+      String permission);
+
+  /**
+   * Determines whether the given user with the given roles and groups has the specified permissions
+   * according to the given access evaluation type.
+   *
+   * @param userContext the user context
+   * @param accessEvaluation the access evaluation type
+   * @param permissions the permissions
+   * @return {@code true} if the user has the permissions, otherwise {@code false}
+   */
+  default boolean hasPermissions(
+      AclUserContext userContext,
+      AccessEvaluation accessEvaluation,
+      Collection&lt;String&gt; permissions) {
+
+<span class="fc bfc" id="L67" title="All 2 branches covered.">    if (accessEvaluation.isAnyPermission()) {</span>
+<span class="fc" id="L68">      return permissions.stream()</span>
+<span class="fc" id="L69">          .anyMatch(permission -&gt; hasPermission(userContext, permission));</span>
+    } else {
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">      return !permissions.isEmpty() &amp;&amp; permissions.stream()</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">          .allMatch(permission -&gt; hasPermission(userContext, permission));</span>
+    }
+  }
+
+  /**
+   * The default access evaluator implementation.
+   *
+   * @author Christian Bremer
+   */
+  class Impl implements AccessEvaluator {
+
+    private final Acl acl;
+
+    /**
+     * Instantiates a new access evaluator.
+     *
+     * @param acl the acl
+     */
+<span class="fc" id="L90">    private Impl(Acl acl) {</span>
+<span class="fc" id="L91">      this.acl = acl;</span>
+<span class="fc" id="L92">    }</span>
+
+    @Override
+    public boolean hasPermission(
+        AclUserContext userContext,
+        String permission) {
+
+<span class="fc bfc" id="L99" title="All 2 branches covered.">      if (isNull(acl)) {</span>
+<span class="fc" id="L100">        return false;</span>
+      }
+<span class="fc bfc" id="L102" title="All 2 branches covered.">      if (isNull(permission)) {</span>
+<span class="fc" id="L103">        return false;</span>
+      }
+<span class="fc bfc" id="L105" title="All 2 branches covered.">      if (!ANONYMOUS.equals(userContext.getName())</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">          &amp;&amp; acl.getOwner().equals(userContext.getName())) {</span>
+<span class="fc" id="L107">        return true;</span>
+      }
+<span class="fc" id="L109">      Ace ace = acl.getPermissionMap().getOrDefault(permission, Ace.empty());</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">      if (ace.isGuest()) {</span>
+<span class="fc" id="L111">        return true;</span>
+      }
+<span class="fc bfc" id="L113" title="All 2 branches covered.">      if (ace.getUsers().contains(userContext.getName())) {</span>
+<span class="fc" id="L114">        return true;</span>
+      }
+<span class="fc bfc" id="L116" title="All 2 branches covered.">      if (userContext.getRoles().stream().anyMatch(role -&gt; ace.getRoles().contains(role))) {</span>
+<span class="fc" id="L117">        return true;</span>
+      }
+<span class="fc" id="L119">      return userContext.getGroups().stream().anyMatch(group -&gt; ace.getGroups().contains(group));</span>
+    }
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

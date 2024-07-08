@@ -1,0 +1,5 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Acl Model,org.bremersee.acl.model,AccessControlListModifications,1,97,2,2,0,29,2,5,0,5
+Acl Model,org.bremersee.acl.model,AccessControlEntryModifications,0,30,0,0,0,12,0,10,0,10
+Acl Model,org.bremersee.acl.model,AccessControlList,0,6,0,0,0,3,0,3,0,3
+Acl Model,org.bremersee.acl.model,AccessControlEntry,0,16,0,0,0,6,0,6,0,6

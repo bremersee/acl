@@ -1,0 +1,14 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Acl,org.bremersee.acl.mapper,DefaultAclMapper,0,53,0,4,0,17,0,5,0,3
+Acl,org.bremersee.acl.mapper,AbstractAclMapper,0,92,0,8,0,25,0,7,0,3
+Acl,org.bremersee.acl,Acl.AclBuilder,22,598,16,28,0,114,23,72,7,66
+Acl,org.bremersee.acl,AccessEvaluation,0,22,0,2,0,4,0,3,0,2
+Acl,org.bremersee.acl,AccessEvaluator,1,38,2,4,0,6,2,5,0,4
+Acl,org.bremersee.acl,AclUserContext,0,8,0,0,0,4,0,4,0,4
+Acl,org.bremersee.acl,PermissionConstants,0,7,0,0,0,1,0,1,0,1
+Acl,org.bremersee.acl,Ace.AceBuilder,6,219,15,17,0,49,15,17,0,16
+Acl,org.bremersee.acl,AccessEvaluator.Impl,0,78,0,14,0,18,0,11,0,4
+Acl,org.bremersee.acl,Ace,0,7,0,0,0,2,0,2,0,2
+Acl,org.bremersee.acl,Ace.AceImpl,0,18,0,0,0,6,0,1,0,1
+Acl,org.bremersee.acl,Acl,0,31,0,2,0,7,0,4,0,3
+Acl,org.bremersee.acl,Acl.AclImpl,3,46,2,6,1,7,3,5,1,3
