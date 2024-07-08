@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.bremersee</groupId>
+    <artifactId>common-parent</artifactId>
+    <version>3.0.1</version>
+    <relativePath/>
+  </parent>
+
+  <artifactId>acl-parent</artifactId>
+  <version>0.0.1</version>
+  <packaging>pom</packaging>
+
+  <name>Acl Parent Module</name>
+  <description>
+    An access control list implementation.
+  </description>
+  <inceptionYear>2022</inceptionYear>
+  <url>https://github.com/bremersee/acl</url>
+
+  <modules>
+    <module>acl-model</module>
+    <module>acl</module>
+    <module>acl-spring-data-mongodb</module>
+  </modules>
+
+  <properties>
+    <github.repo>acl</github.repo>
+    <!--suppress UnresolvedMavenProperty -->
+    <gh-pages-staging-dir>${maven.multiModuleProjectDirectory}/target/staging</gh-pages-staging-dir>
+
+    <spring-integration.version>0.0.1</spring-integration.version>
+  </properties>
+
+  <developers>
+    <developer>
+      <id>bremersee</id>
+      <name>Christian Bremer</name>
+      <organization>bremersee.org</organization>
+      <organizationUrl>https://bremersee.org</organizationUrl>
+      <email>christian@bremersee.org</email>
+      <timezone>+1</timezone>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <organization>
+    <name>bremersee.org</name>
+    <url>https://bremersee.org</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://github.com/bremersee/acl</url>
+    <connection>scm:git:git://github.com/bremersee/acl.git</connection>
+    <developerConnection>scm:git:git@github.com:bremersee/acl.git</developerConnection>
+  </scm>
+
+  <issueManagement>
+    <url>https://github.com/bremersee/acl/issues</url>
+    <system>GitHub Issues</system>
+  </issueManagement>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <site>
+      <id>bremersee-sites</id>
+      <url>
+        dav:https://nexus.bremersee.org/repository/maven-sites/acl/${project.version}
+      </url>
+    </site>
+  </distributionManagement>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.bremersee</groupId>
+        <artifactId>spring-integration-data-mongodb</artifactId>
+        <version>${spring-integration.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bremersee</groupId>
+        <artifactId>spring-integration-boot-autoconfigure</artifactId>
+        <version>${spring-integration.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+</project>
