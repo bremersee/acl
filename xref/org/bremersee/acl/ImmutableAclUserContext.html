@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<title>/srv/jenkins/workspace/acl_main/acl/target/generated-sources/annotations/org/bremersee/acl/ImmutableAclUserContext.java xref</title>
+<title>ImmutableAclUserContext xref</title>
 <link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../apidocs/org/bremersee/acl">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../apidocs/org/bremersee/acl/ImmutableAclUserContext.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> org.bremersee.acl;
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> java.util.ArrayList;
@@ -307,9 +307,9 @@
 <a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L300" href="#L300">300</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> Builder from(<a name="AclUserContext" href="../../../org/bremersee/acl/AclUserContext.html#AclUserContext">AclUserContext</a> instance) {
 <a class="jxr_linenumber" name="L301" href="#L301">301</a>       Objects.requireNonNull(instance, <span class="jxr_string">"instance"</span>);
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>       name(instance.getName());
-<a class="jxr_linenumber" name="L303" href="#L303">303</a>       roles(instance.getRoles());
-<a class="jxr_linenumber" name="L304" href="#L304">304</a>       groups(instance.getGroups());
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>       <strong class="jxr_keyword">this</strong>.name(instance.getName());
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>       <strong class="jxr_keyword">this</strong>.roles(instance.getRoles());
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>       <strong class="jxr_keyword">this</strong>.groups(instance.getGroups());
 <a class="jxr_linenumber" name="L305" href="#L305">305</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L306" href="#L306">306</a>     }
 <a class="jxr_linenumber" name="L307" href="#L307">307</a> 

@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<title>/srv/jenkins/workspace/acl_main/acl-model/target/generated-sources/annotations/org/bremersee/acl/model/ImmutableAccessControlEntry.java xref</title>
+<title>ImmutableAccessControlEntry xref</title>
 <link type="text/css" rel="stylesheet" href="../../../../stylesheet.css" />
 </head>
 <body>
-<div id="overview"><a href="../../../../../apidocs/org/bremersee/acl/model">View Javadoc</a></div><pre>
+<div id="overview"><a href="../../../../../apidocs/org/bremersee/acl/model/ImmutableAccessControlEntry.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> org.bremersee.acl.model;
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonProperty;
@@ -406,11 +406,11 @@
 <a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L399" href="#L399">399</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> Builder from(<a name="AccessControlEntry" href="../../../../org/bremersee/acl/model/AccessControlEntry.html#AccessControlEntry">AccessControlEntry</a> instance) {
 <a class="jxr_linenumber" name="L400" href="#L400">400</a>       Objects.requireNonNull(instance, <span class="jxr_string">"instance"</span>);
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>       permission(instance.getPermission());
-<a class="jxr_linenumber" name="L402" href="#L402">402</a>       isGuest(instance.isGuest());
-<a class="jxr_linenumber" name="L403" href="#L403">403</a>       users(instance.getUsers());
-<a class="jxr_linenumber" name="L404" href="#L404">404</a>       roles(instance.getRoles());
-<a class="jxr_linenumber" name="L405" href="#L405">405</a>       groups(instance.getGroups());
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>       <strong class="jxr_keyword">this</strong>.permission(instance.getPermission());
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>       <strong class="jxr_keyword">this</strong>.isGuest(instance.isGuest());
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>       <strong class="jxr_keyword">this</strong>.users(instance.getUsers());
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>       <strong class="jxr_keyword">this</strong>.roles(instance.getRoles());
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>       <strong class="jxr_keyword">this</strong>.groups(instance.getGroups());
 <a class="jxr_linenumber" name="L406" href="#L406">406</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L407" href="#L407">407</a>     }
 <a class="jxr_linenumber" name="L408" href="#L408">408</a> 
