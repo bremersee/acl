@@ -1,6 +1,6 @@
 # Access Control List
 
-[![codecov](https://codecov.io/gh/bremersee/acl/branch/main/graph/badge.svg)](https://codecov.io/gh/bremersee/acl)
+[![codecov](https://codecov.io/gh/bremersee/acl/branch/develop/graph/badge.svg)](https://codecov.io/gh/bremersee/acl)
 
 #### Maven Site
 
